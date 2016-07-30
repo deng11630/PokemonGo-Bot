@@ -9,8 +9,9 @@ namespace PokemonGo.RocketAPI.Window
 {
     public static class TransfertAndEvolveSetting
     {
+        #region Transfert And Evolve Setting
         public static PokemonId[] toTransfert = new[]
-           {
+        {
         PokemonId.Bulbasaur,
         PokemonId.Ivysaur,
         PokemonId.Charmander,
@@ -142,6 +143,7 @@ namespace PokemonGo.RocketAPI.Window
         PokemonId.Kabuto,
         PokemonId.Kabutops,
         PokemonId.Aerodactyl,
+        PokemonId.Eevee,
         PokemonId.Dratini
         };
         public static PokemonId[] toEvolve = new[]
@@ -197,6 +199,7 @@ namespace PokemonGo.RocketAPI.Window
         PokemonId.Omanyte,
         PokemonId.Kabuto,
        };
+        #endregion
 
     }
 }

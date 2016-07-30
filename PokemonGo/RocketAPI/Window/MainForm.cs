@@ -18,6 +18,7 @@ using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.Exceptions;
 using PokemonGo.RocketAPI.Extensions;
 using PokemonGo.RocketAPI.GeneratedCode;
+using PokemonGo.RocketAPI.Window.Settings;
 
 namespace PokemonGo.RocketAPI.Window
 {
@@ -140,7 +141,7 @@ namespace PokemonGo.RocketAPI.Window
 
             if (ClientSettings.EvolveAllGivenPokemons)
                 await EvolveAllGivenPokemons(client, pokemons.
-                    Where(p => toEvolve.Contains(p.PokemonId)).OrderByDescending(p => Perfect(p)).ToList());
+                    Where(p => TransfertAndEvolveSetting.toEvolve.Contains(p.PokemonId)).OrderByDescending(p => Perfect(p)).ToList());
             switch (ClientSettings.TransferType)
             {
                 case "Leave Strongest":
@@ -210,7 +211,7 @@ namespace PokemonGo.RocketAPI.Window
                         ColoredConsoleWrite(ConsoleColor.White, $"Due to above error, stopping evolving {pokemon.PokemonId}");
                         */
                     }
-                } while (evolvePokemonOutProto.Result == 1 && toEvolve.Contains(evolvePokemonOutProto.EvolvedPokemon.PokemonType));
+                } while (evolvePokemonOutProto.Result == 1 && TransfertAndEvolveSetting.toEvolve.Contains(evolvePokemonOutProto.EvolvedPokemon.PokemonType));
                 if (countOfEvolvedUnits > 0)
                     ColoredConsoleWrite(Color.Cyan,
                         $"Evolved {countOfEvolvedUnits} pieces of {pokemon.PokemonId} for {xpCount}xp");
@@ -403,12 +404,9 @@ namespace PokemonGo.RocketAPI.Window
 
                 string pokemonName;
                 if (language == "german")
-                {
-                    string name_english = Convert.ToString(pokemon.PokemonId);
-                    var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
-                    var response = (HttpWebResponse)request.GetResponse();
-                    pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();    
-                }
+                    pokemonName = LanguageSetting.GermanName[(int)pokemon.PokemonId];
+                else if (language == "french")
+                    pokemonName = LanguageSetting.frenchPokemons[(int)pokemon.PokemonId];
                 else
                     pokemonName = Convert.ToString(pokemon.PokemonId);
 
@@ -635,7 +633,7 @@ namespace PokemonGo.RocketAPI.Window
                 .ToArray();
 
 
-            foreach (var unwantedPokemonType in toTransfert)
+            foreach (var unwantedPokemonType in TransfertAndEvolveSetting.toTransfert)
             {
                 var unwantedPokemons = pokemons.Where(p => p.PokemonId == unwantedPokemonType)
                     .OrderByDescending(p => Perfect(p)).ThenBy(p => p.Cp).Skip(1).ToList();
@@ -658,7 +656,7 @@ namespace PokemonGo.RocketAPI.Window
                 .ToArray();
 
 
-            foreach (var unwantedPokemonType in toTransfert)
+            foreach (var unwantedPokemonType in TransfertAndEvolveSetting.toTransfert)
             {
                 var unwantedPokemons = pokemons.Where(p => p.PokemonId == unwantedPokemonType && Perfect(p) > iv)
                     .OrderByDescending(p => Perfect(p)).ThenBy(p => p.Cp).Skip(1).ToList();
@@ -675,36 +673,6 @@ namespace PokemonGo.RocketAPI.Window
         {
             //ColoredConsoleWrite(ConsoleColor.White, $"Firing up the meat grinder");
 
-            var unwantedPokemonTypes = new[]
-            {
-                PokemonId.Pidgey,
-                PokemonId.Rattata,
-                PokemonId.Weedle,
-                PokemonId.Zubat,
-                PokemonId.Caterpie,
-                PokemonId.Pidgeotto,
-                PokemonId.NidoranFemale,
-                PokemonId.Paras,
-                PokemonId.Venonat,
-                PokemonId.Psyduck,
-                PokemonId.Poliwag,
-                PokemonId.Slowpoke,
-                PokemonId.Drowzee,
-                PokemonId.Gastly,
-                PokemonId.Goldeen,
-                PokemonId.Staryu,
-                PokemonId.Magikarp,
-                PokemonId.Clefairy,
-                PokemonId.Eevee,
-                PokemonId.Tentacool,
-                PokemonId.Dratini,
-                PokemonId.Ekans,
-                PokemonId.Jynx,
-                PokemonId.Lickitung,
-                PokemonId.Spearow,
-                PokemonId.NidoranFemale,
-                PokemonId.NidoranMale
-            };
 
             var inventory = await client.GetInventory();
             var pokemons = inventory.InventoryDelta.InventoryItems
@@ -712,7 +680,7 @@ namespace PokemonGo.RocketAPI.Window
                 .Where(p => p != null && p?.PokemonId > 0)
                 .ToArray();
 
-            foreach (var unwantedPokemonType in unwantedPokemonTypes)
+            foreach (var unwantedPokemonType in TransfertAndEvolveSetting.toTransfert)
             {
                 var pokemonOfDesiredType = pokemons.Where(p => p.PokemonId == unwantedPokemonType)
                     .OrderByDescending(p => p.Cp)
@@ -755,14 +723,9 @@ namespace PokemonGo.RocketAPI.Window
                     }*/
                     string pokemonName;
                     if (language == "german")
-                    {
-                        // Dont really need to print this do we? youll know if its German or not
-                        //ColoredConsoleWrite(Color.DarkCyan, "german");
-                        string name_english = Convert.ToString(pokemon.PokemonId);
-                        var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
-                        var response = (HttpWebResponse)request.GetResponse();
-                        pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                    }
+                        pokemonName = LanguageSetting.GermanName[(int)pokemon.PokemonId];
+                    else if (language == "french")
+                        pokemonName = LanguageSetting.frenchPokemons[(int)pokemon.PokemonId];
                     else
                         pokemonName = Convert.ToString(pokemon.PokemonId);
                     if (transferPokemonResponse.Status == 1)
@@ -806,12 +769,9 @@ namespace PokemonGo.RocketAPI.Window
                         var transfer = await client.TransferPokemon(dubpokemon.Id);
                         string pokemonName;
                         if (language == "german")
-                        {
-                            string name_english = Convert.ToString(dubpokemon.PokemonId);
-                            var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
-                            var response = (HttpWebResponse)request.GetResponse();
-                            pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                        }
+                            pokemonName = LanguageSetting.GermanName[(int)dubpokemon.PokemonId];
+                        else if (language == "french")
+                            pokemonName = LanguageSetting.frenchPokemons[(int)dubpokemon.PokemonId];
                         else
                             pokemonName = Convert.ToString(dubpokemon.PokemonId);
                         ColoredConsoleWrite(Color.DarkGreen,
@@ -1148,196 +1108,6 @@ namespace PokemonGo.RocketAPI.Window
             mForm.Show();
         }
 
-        #region Transfert And Evolve Setting
-        public static PokemonId[] toTransfert = new[]
-        {
-        PokemonId.Bulbasaur,
-        PokemonId.Ivysaur,
-        PokemonId.Charmander,
-        PokemonId.Charmeleon,
-        PokemonId.Squirtle,
-        PokemonId.Wartortle,
-        PokemonId.Caterpie,
-        PokemonId.Metapod,
-        PokemonId.Butterfree,
-        PokemonId.Weedle,
-        PokemonId.Kakuna,
-        PokemonId.Beedrill,
-        PokemonId.Pidgey,
-        PokemonId.Pidgeotto,
-        PokemonId.Pidgeot,
-        PokemonId.Rattata,
-        PokemonId.Raticate,
-        PokemonId.Spearow,
-        PokemonId.Fearow,
-        PokemonId.Ekans,
-        PokemonId.Arbok,
-        PokemonId.Pikachu,
-        PokemonId.Raichu,
-        PokemonId.Sandshrew,
-        PokemonId.Sandlash,
-        PokemonId.NidoranFemale,
-        PokemonId.Nidorina,
-        PokemonId.Nidoqueen,
-        PokemonId.NidoranMale,
-        PokemonId.Nidorino,
-        PokemonId.Nidoking,
-        PokemonId.Clefairy,
-        PokemonId.Clefable,
-        PokemonId.Vulpix,
-        PokemonId.Ninetales,
-        PokemonId.Jigglypuff,
-        PokemonId.Wigglytuff,
-        PokemonId.Zubat,
-        PokemonId.Golbat,
-        PokemonId.Oddish,
-        PokemonId.Gloom,
-        PokemonId.Vileplume,
-        PokemonId.Paras,
-        PokemonId.Parasect,
-        PokemonId.Venonat,
-        PokemonId.Venomoth,
-        PokemonId.Diglett,
-        PokemonId.Dugtrio,
-        PokemonId.Meowth,
-        PokemonId.Persian,
-        PokemonId.Psyduck,
-        PokemonId.Golduck,
-        PokemonId.Mankey,
-        PokemonId.Primeape,
-        PokemonId.Growlithe,
-        PokemonId.Poliwag,
-        PokemonId.Poliwhirl,
-        PokemonId.Poliwrath,
-        PokemonId.Abra,
-        PokemonId.Kadabra,
-        PokemonId.Alakhazam,
-        PokemonId.Machop,
-        PokemonId.Machoke,
-        PokemonId.Machamp,
-        PokemonId.Bellsprout,
-        PokemonId.Weepinbell,
-        PokemonId.Victreebell,
-        PokemonId.Tentacool,
-        PokemonId.Tentacruel,
-        PokemonId.Geodude,
-        PokemonId.Graveler,
-        PokemonId.Golem,
-        PokemonId.Ponyta,
-        PokemonId.Rapidash,
-        PokemonId.Slowpoke,
-        PokemonId.Slowbro,
-        PokemonId.Magnemite,
-        PokemonId.Magneton,
-        PokemonId.Farfetchd,
-        PokemonId.Doduo,
-        PokemonId.Dodrio,
-        PokemonId.Seel,
-        PokemonId.Dewgong,
-        PokemonId.Grimer,
-        PokemonId.Muk,
-        PokemonId.Shellder,
-        PokemonId.Cloyster,
-        PokemonId.Gastly,
-        PokemonId.Haunter,
-        PokemonId.Gengar,
-        PokemonId.Onix,
-        PokemonId.Drowzee,
-        PokemonId.Hypno,
-        PokemonId.Krabby,
-        PokemonId.Kingler,
-        PokemonId.Voltorb,
-        PokemonId.Electrode,
-        PokemonId.Exeggcute,
-        PokemonId.Cubone,
-        PokemonId.Marowak,
-        PokemonId.Hitmonlee,
-        PokemonId.Hitmonchan,
-        PokemonId.Lickitung,
-        PokemonId.Koffing,
-        PokemonId.Weezing,
-        PokemonId.Rhyhorn,
-        PokemonId.Rhydon,
-        PokemonId.Chansey,
-        PokemonId.Tangela,
-        PokemonId.Kangaskhan,
-        PokemonId.Horsea,
-        PokemonId.Seadra,
-        PokemonId.Goldeen,
-        PokemonId.Seaking,
-        PokemonId.Staryu,
-        PokemonId.Starmie,
-        PokemonId.MrMime,
-        PokemonId.Scyther,
-        PokemonId.Jynx,
-        PokemonId.Electabuzz,
-        PokemonId.Magmar,
-        PokemonId.Pinsir,
-        PokemonId.Tauros,
-        PokemonId.Magikarp,
-        PokemonId.Ditto,
-        PokemonId.Porygon,
-        PokemonId.Omanyte,
-        PokemonId.Omastar,
-        PokemonId.Kabuto,
-        PokemonId.Kabutops,
-        PokemonId.Aerodactyl,
-        PokemonId.Eevee,
-        PokemonId.Dratini
-        };
-        public static PokemonId[] toEvolve = new[]
-        {
-         PokemonId.Caterpie,
-        PokemonId.Weedle,
-        PokemonId.Pidgey,
-        PokemonId.Rattata,
-        PokemonId.Spearow,
-        PokemonId.Ekans,
-        PokemonId.Pikachu,
-        PokemonId.Sandshrew,
-        PokemonId.Clefairy,
-        PokemonId.Vulpix,
-        PokemonId.Jigglypuff,
-        PokemonId.Zubat,
-        PokemonId.Oddish,
-        PokemonId.Paras,
-        PokemonId.Venonat,
-        PokemonId.Diglett,
-        PokemonId.Meowth,
-        PokemonId.Psyduck,
-        PokemonId.Mankey,
-        PokemonId.Poliwag,
-        PokemonId.Abra,
-        PokemonId.Machop,
-        PokemonId.Bellsprout,
-        PokemonId.Tentacool,
-        PokemonId.Geodude,
-        PokemonId.Ponyta,
-        PokemonId.Slowpoke,
-        PokemonId.Magnemite,
-        PokemonId.Farfetchd,
-        PokemonId.Doduo,
-        PokemonId.Seel,
-        PokemonId.Grimer,
-        PokemonId.Shellder,
-        PokemonId.Cloyster,
-        PokemonId.Gastly,
-        PokemonId.Drowzee,
-        PokemonId.Krabby,
-        PokemonId.Voltorb,
-        PokemonId.Cubone,
-        PokemonId.Hitmonlee,
-        PokemonId.Hitmonchan,
-        PokemonId.Lickitung,
-        PokemonId.Koffing,
-        PokemonId.Rhyhorn,
-        PokemonId.Horsea,
-        PokemonId.Goldeen,
-        PokemonId.Staryu,
-        PokemonId.Ditto,
-        PokemonId.Omanyte,
-        PokemonId.Kabuto,
-       };
-        #endregion
+
     }
 }
