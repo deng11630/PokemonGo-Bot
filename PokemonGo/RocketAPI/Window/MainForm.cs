@@ -23,10 +23,12 @@ namespace PokemonGo.RocketAPI.Window
 {
     public partial class MainForm : Form
     {
+        private string language;
         public MainForm()
         {
             InitializeComponent();
             ClientSettings = Settings.Instance;
+            language = ClientSettings.Language;
         }
 
         public static int nbPokemons;
@@ -400,13 +402,12 @@ namespace PokemonGo.RocketAPI.Window
                 } while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape);
 
                 string pokemonName;
-                if (ClientSettings.Language == "german")
+                if (language == "german")
                 {
-                    //string name_english = Convert.ToString(pokemon.PokemonId);
-                    //var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
-                    //var response = (HttpWebResponse)request.GetResponse();
-                    //pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                    pokemonName = "no support german names for optimise time";
+                    string name_english = Convert.ToString(pokemon.PokemonId);
+                    var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
+                    var response = (HttpWebResponse)request.GetResponse();
+                    pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();    
                 }
                 else
                     pokemonName = Convert.ToString(pokemon.PokemonId);
@@ -730,7 +731,6 @@ namespace PokemonGo.RocketAPI.Window
         private async Task TransferAllGivenPokemons(Client client, IEnumerable<PokemonData> unwantedPokemons, float keepPerfectPokemonLimit = 80.0f)
         {
 
-            string language = ClientSettings.Language;
             foreach (var pokemon in unwantedPokemons)
             {
                 //if (Perfect(pokemon) >= keepPerfectPokemonLimit) continue;
@@ -800,14 +800,14 @@ namespace PokemonGo.RocketAPI.Window
                     {
                         var transfer = await client.TransferPokemon(dubpokemon.Id);
                         string pokemonName;
-                        //if (ClientSettings.Language == "german")
-                        //{
-                        //    string name_english = Convert.ToString(dubpokemon.PokemonId);
-                        //    var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
-                        //    var response = (HttpWebResponse)request.GetResponse();
-                        //    pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                        //}
-                        //else
+                        if (language == "german")
+                        {
+                            string name_english = Convert.ToString(dubpokemon.PokemonId);
+                            var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
+                            var response = (HttpWebResponse)request.GetResponse();
+                            pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                        }
+                        else
                             pokemonName = Convert.ToString(dubpokemon.PokemonId);
                         ColoredConsoleWrite(Color.DarkGreen,
                             $"Transferred {pokemonName} with {dubpokemon.Cp} CP (Highest is {dupes.ElementAt(i).Last().value.Cp})");
