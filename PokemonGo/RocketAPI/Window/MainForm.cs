@@ -501,6 +501,11 @@ namespace PokemonGo.RocketAPI.Window
                     PossiblePokestops = pokeStops.
                         Where(i => distanceFrom(i.Latitude, i.Longitude, defLatitude, defLongitude) < maxDist)
                         .OrderBy(i => i.CooldownCompleteTimestampMs).ToList();
+                if (PossiblePokestops.Count() < 1)
+                {
+                    ColoredConsoleWrite(Color.Red, $"Please choice a spot with at least 1 pokestop");
+                    return;  
+                }
                 var pokeStop = PossiblePokestops.First();
 
                 FarmingStops = true;
