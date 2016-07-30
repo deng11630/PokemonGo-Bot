@@ -88,16 +88,16 @@ namespace PokemonGo.RocketAPI.Window
 
         ICollection<KeyValuePair<ItemId, int>> ISettings.ItemRecycleFilter => new[]
         {
-            new KeyValuePair<ItemId, int>(ItemId.ItemPokeBall, 20),
+            new KeyValuePair<ItemId, int>(ItemId.ItemPokeBall, 0),
             new KeyValuePair<ItemId, int>(ItemId.ItemGreatBall, 50),
-            new KeyValuePair<ItemId, int>(ItemId.ItemUltraBall, 100),
+            new KeyValuePair<ItemId, int>(ItemId.ItemUltraBall, 150),
             new KeyValuePair<ItemId, int>(ItemId.ItemMasterBall, 200),
-            new KeyValuePair<ItemId, int>(ItemId.ItemRazzBerry, 20),
-            new KeyValuePair<ItemId, int>(ItemId.ItemRevive, 20),
+            new KeyValuePair<ItemId, int>(ItemId.ItemRazzBerry, 30),
+            new KeyValuePair<ItemId, int>(ItemId.ItemRevive, 0),
             new KeyValuePair<ItemId, int>(ItemId.ItemPotion, 0),
             new KeyValuePair<ItemId, int>(ItemId.ItemSuperPotion, 0),
-            new KeyValuePair<ItemId, int>(ItemId.ItemHyperPotion, 50),
-            new KeyValuePair<ItemId, int>(ItemId.ItemMaxPotion, 100)
+            new KeyValuePair<ItemId, int>(ItemId.ItemHyperPotion, 0),
+            new KeyValuePair<ItemId, int>(ItemId.ItemMaxPotion, 0)
         };
 
         public int RecycleItemsInterval => GetSetting() != string.Empty ? Convert.ToInt16(GetSetting()) : 60;

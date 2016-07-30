@@ -320,8 +320,8 @@ namespace PokemonGo.RocketAPI.Window
                 client.stopRecycle = false;
                 stopPrintLevel = false;
 
-                //if (ClientSettings.Recycler)
-                //    recycle = client.RecycleItems(client);
+                if (ClientSettings.Recycler)
+                    recycle = client.RecycleItems(client);
                 printLevel = PrintLevel(client);
                 await EvolveAndTransfert(client);
                 await ExecuteFarmingPokestopsAndPokemons(client);
@@ -500,8 +500,6 @@ namespace PokemonGo.RocketAPI.Window
                     PossiblePokestops = pokeStops.
                         Where(i => distanceFrom(i.Latitude, i.Longitude, defLatitude, defLongitude) < maxDist)
                         .OrderBy(i => i.CooldownCompleteTimestampMs).ToList();
-                if (ForceUnbanning || Stopping)
-                    break;
                 var pokeStop = PossiblePokestops.First();
 
                 FarmingStops = true;
@@ -542,7 +540,7 @@ namespace PokemonGo.RocketAPI.Window
                     await ExecuteCatchAllNearbyPokemons(client, pokeStopMapObjects);
 
 
-            } while (true);
+            } while (!ForceUnbanning && !Stopping);
         }
 
         private async Task ForceUnban(Client client)
