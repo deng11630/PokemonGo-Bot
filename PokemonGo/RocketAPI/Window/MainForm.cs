@@ -513,7 +513,7 @@ namespace PokemonGo.RocketAPI.Window
                     fortSearch = await client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     PrintPokestopTakeInfos(fortInfo, fortSearch);
                 }
-                while (fortSearch.ExperienceAwarded == 0);
+                while (fortSearch.ExperienceAwarded == 0 && !ForceUnbanning && !Stopping);
                 pokeStop.CooldownCompleteTimestampMs = DateTime.UtcNow.AddMinutes(5).ToUnixTime();
                 var pokeStopMapObjects = await client.GetMapObjects();
 
