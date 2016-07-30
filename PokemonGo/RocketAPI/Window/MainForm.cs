@@ -29,6 +29,8 @@ namespace PokemonGo.RocketAPI.Window
             ClientSettings = Settings.Instance;
         }
 
+        public static int nbPokemons;
+
         private void MainForm_Load(object sender, EventArgs e)
         {
 
@@ -60,25 +62,10 @@ namespace PokemonGo.RocketAPI.Window
         public void CheckVersion()
         {
             try
-            {
-                var match =
-                    new Regex(
-                        @"\[assembly\: AssemblyVersion\(""(\d{1,})\.(\d{1,})\.(\d{1,})\.(\d{1,})""\)\]")
-                        .Match(DownloadServerVersion());
-
-                if (!match.Success) return;
-                var gitVersion =
-                    new Version(
-                        string.Format(
-                            "{0}.{1}.{2}.{3}",
-                            match.Groups[1],
-                            match.Groups[2],
-                            match.Groups[3],
-                            match.Groups[4]));
+            {  
                 // makes sense to display your version and say what the current one is on github
-                ColoredConsoleWrite(Color.Green, "Your version is " + Assembly.GetExecutingAssembly().GetName().Version);
-                ColoredConsoleWrite(Color.Green, "Github version is " + gitVersion);
-                ColoredConsoleWrite(Color.Green, "You can find it at www.GitHub.com/DetectiveSquirrel/Pokemon-Go-Rocket-API");
+                ColoredConsoleWrite(Color.Green, "Your version is 2.0.1" );
+                ColoredConsoleWrite(Color.Green, "You can find it at www.github.com/mfron/Pokemon-Go-Bot");
             }
             catch (Exception)
             {
@@ -145,12 +132,13 @@ namespace PokemonGo.RocketAPI.Window
             var pokemons =
                 inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon)
                     .Where(p => p != null && p?.PokemonId > 0);
+            nbPokemons = pokemons.Count();
             if (pokemons.Count() < 230)
                 return;
 
             if (ClientSettings.EvolveAllGivenPokemons)
                 await EvolveAllGivenPokemons(client, pokemons.
-                    Where(p => toEvolve.Contains(p.PokemonId)).OrderByDescending(p => Perfect(p)));
+                    Where(p => toEvolve.Contains(p.PokemonId)).OrderByDescending(p => Perfect(p)).ToList());
             switch (ClientSettings.TransferType)
             {
                 case "Leave Strongest":
@@ -332,8 +320,8 @@ namespace PokemonGo.RocketAPI.Window
                 client.stopRecycle = false;
                 stopPrintLevel = false;
 
-                if (ClientSettings.Recycler)
-                    recycle = client.RecycleItems(client);
+                //if (ClientSettings.Recycler)
+                //    recycle = client.RecycleItems(client);
                 printLevel = PrintLevel(client);
                 await EvolveAndTransfert(client);
                 await ExecuteFarmingPokestopsAndPokemons(client);
@@ -379,17 +367,11 @@ namespace PokemonGo.RocketAPI.Window
             }
             return "Error";
         }
-        private async Task ExecuteCatchAllNearbyPokemons(Client client)
+        private async Task ExecuteCatchAllNearbyPokemons(Client clien, GetMapObjectsResponse mapObjects)
         {
-            var mapObjects = await client.GetMapObjects();
-
             var pokemons = mapObjects.MapCells.SelectMany(i => i.CatchablePokemons);
-            var inventory2 = await client.GetInventory();
-            var pokemons2 = inventory2.InventoryDelta.InventoryItems
-                .Select(i => i.InventoryItemData?.Pokemon)
-                .Where(p => p != null && p?.PokemonId > 0)
-                .ToArray();
-
+            if (!(nbPokemons < 230))
+                await EvolveAndTransfert(clien);                
             foreach (var pokemon in pokemons)
             {
                 if (ForceUnbanning || Stopping)
@@ -397,7 +379,7 @@ namespace PokemonGo.RocketAPI.Window
 
                 FarmingPokemons = true;
 
-                await locationManager.update(pokemon.Latitude, pokemon.Longitude);
+               // await locationManager.update(pokemon.Latitude, pokemon.Longitude);
                 var encounterPokemonResponse = await client.EncounterPokemon(pokemon.EncounterId, pokemon.SpawnpointId);
                 var pokemonCP = encounterPokemonResponse?.WildPokemon?.PokemonData?.Cp;
                 var pokemonIV = Math.Round(Perfect(encounterPokemonResponse?.WildPokemon?.PokemonData));
@@ -416,10 +398,11 @@ namespace PokemonGo.RocketAPI.Window
                 string pokemonName;
                 if (ClientSettings.Language == "german")
                 {
-                    string name_english = Convert.ToString(pokemon.PokemonId);
-                    var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
-                    var response = (HttpWebResponse)request.GetResponse();
-                    pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                    //string name_english = Convert.ToString(pokemon.PokemonId);
+                    //var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
+                    //var response = (HttpWebResponse)request.GetResponse();
+                    //pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                    pokemonName = "no support german names for optimise time";
                 }
                 else
                     pokemonName = Convert.ToString(pokemon.PokemonId);
@@ -430,19 +413,24 @@ namespace PokemonGo.RocketAPI.Window
                     foreach (int xp in caughtPokemonResponse.Scores.Xp)
                         TotalExperience += xp;
                     TotalPokemon += 1;
+                    nbPokemons++;
                 }
                 else
                     ColoredConsoleWrite(Color.Red, $"{pokemonName} with {pokemonCP} CP and {pokemonIV}% IV got away..");
                 FarmingPokemons = false;
                 await Task.Delay(0);     //3000
-            }
-            await EvolveAndTransfert(client);
+            }                        
         }
 
 
         private void PrintPokestopTakeInfos(FortDetailsResponse fortInfo, FortSearchResponse fortSearch)
         {
             StringWriter PokeStopOutput = new StringWriter();
+            if (fortSearch.ExperienceAwarded == 0)
+            {
+                ColoredConsoleWrite(Color.Cyan, "Wait for unlock catchs ...");
+                return;
+            }     
             PokeStopOutput.Write($"");
             if (fortInfo.Name != string.Empty)
                 PokeStopOutput.Write("PokeStop: " + fortInfo.Name);
@@ -457,32 +445,61 @@ namespace PokemonGo.RocketAPI.Window
             ColoredConsoleWrite(Color.Cyan, PokeStopOutput.ToString());
             if (fortSearch.ExperienceAwarded != 0)
                 TotalExperience += (fortSearch.ExperienceAwarded);
+
+            PokeStopOutput.Dispose();
         }
 
+        public double mpi180 = Math.PI / 180;
 
+        public double distanceFrom(double lat1, double lon1, double lat2, double lon2)
+        {
+            var R = 6371; // km
+            var dLat = (lat2 - lat1) * mpi180;
+            var dLon = (lon2 - lon1) * mpi180;
+            lat1 = lat1 * mpi180;
+            lat2 = lat2 * mpi180;
+
+            var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                    Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
+            var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return R * c;
+        }
 
 
         private async Task ExecuteFarmingPokestopsAndPokemons(Client client, IEnumerable<FortData> pokeStops = null)
         {
+            double maxDist = 1;    //max dist in km
+
+            double defLatitude = ClientSettings.DefaultLatitude;
+            double defLongitude = ClientSettings.DefaultLongitude;
+            bool catchPokemons = ClientSettings.CatchPokemon;
+
+
             FortSearchResponse fortSearch;
             var mapObjects = await client.GetMapObjects();
             if (pokeStops == null)
             {
-                pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint);
+                pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(
+                    i => i.Type == FortType.Checkpoint && distanceFrom(i.Latitude, i.Longitude, defLatitude, defLongitude) < maxDist).ToList();
             }
-            pokeStops.ToList().ForEach(i => i.CooldownCompleteTimestampMs = 0);
-            HashSet<FortData> pokeStopSet = new HashSet<FortData>(pokeStops);
-            IEnumerable<FortData> nextPokeStopList = null;
+           // pokeStops.ToList().ForEach(i => i.CooldownCompleteTimestampMs = 0);
             if (!ForceUnbanning && !Stopping)
                 ColoredConsoleWrite(Color.Cyan, $"Visiting {pokeStops.Count()} PokeStops");
 
-
-
             do
             {
-                var pokeStop = pokeStops.Where(i => i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime()).OrderBy(i => locationManager.BasicDist(i.Latitude, i.Longitude)).First();
+                
+                var PossiblePokestops = pokeStops.
+                    Where(i => i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime()).OrderBy(i => locationManager.getDistance(i.Latitude, i.Longitude)).ToList();
+                //ColoredConsoleWrite(Color.Yellow, "Pokestop near " + pokeStops.Where(i => distanceFrom(i.Latitude, i.Longitude, ClientSettings.DefaultLatitude, ClientSettings.DefaultLongitude) < maxDist).Count());
+                if (PossiblePokestops.Count() < 1)
+                    PossiblePokestops = pokeStops.
+                        Where(i => distanceFrom(i.Latitude, i.Longitude, defLatitude, defLongitude) < maxDist)
+                        .OrderBy(i => i.CooldownCompleteTimestampMs).ToList();
                 if (ForceUnbanning || Stopping)
                     break;
+                var pokeStop = PossiblePokestops.First();
+
                 FarmingStops = true;
                 await locationManager.update(pokeStop.Latitude, pokeStop.Longitude);
                 var fortInfo = await client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
@@ -496,23 +513,29 @@ namespace PokemonGo.RocketAPI.Window
                 }
                 while (fortSearch.ExperienceAwarded == 0);
                 pokeStop.CooldownCompleteTimestampMs = DateTime.UtcNow.AddMinutes(5).ToUnixTime();
-                //var pokeStopMapObjects = await client.GetMapObjects();
+                var pokeStopMapObjects = await client.GetMapObjects();
 
 
-                /* Gets all pokeStops near this pokeStop which are not in the set of pokeStops being currently
-                 * traversed and which are ready to be farmed again.  */
-                //var pokeStopsNearPokeStop = pokeStopMapObjects.MapCells.SelectMany(i => i.Forts).Where(i =>
-                //    i.Type == FortType.Checkpoint
-                //    && i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime()
-                //    && !pokeStopSet.Contains(i));
+                ///* Gets all pokeStops near this pokeStop which are not in the set of pokeStops being currently
+                // * traversed and which are ready to be farmed again.  */
+                var pokeStopsNearPokeStop = pokeStopMapObjects.MapCells.SelectMany(i => i.Forts).Where(i =>
+                    i.Type == FortType.Checkpoint).ToList();
+                var ids = pokeStops.Select(p => p.Id).ToList();
+
+
+                var items = pokeStopsNearPokeStop.Where(i => !ids.Contains(i.Id) && distanceFrom(i.Latitude, i.Longitude, defLatitude, defLongitude) < maxDist ).ToList();
+                pokeStops = pokeStops.Concat(items);
+
+            //    ColoredConsoleWrite(Color.Yellow, "Pokestop count " + pokeStops.Count());
+
                 /* We choose the longest list of farmable PokeStops to traverse next, though we could use a different
                  * criterion, such as the number of PokeStops with lures in the list.*/
                 //if (pokeStopsNearPokeStop.Count() > (nextPokeStopList == null ? 0 : nextPokeStopList.Count()))
                 //{
                 //    nextPokeStopList = pokeStopsNearPokeStop;
                 //}
-                if (ClientSettings.CatchPokemon)
-                    await ExecuteCatchAllNearbyPokemons(client);
+                if (catchPokemons)
+                    await ExecuteCatchAllNearbyPokemons(client, pokeStopMapObjects);
 
 
             } while (true);
@@ -606,7 +629,7 @@ namespace PokemonGo.RocketAPI.Window
             foreach (var unwantedPokemonType in toTransfert)
             {
                 var unwantedPokemons = pokemons.Where(p => p.PokemonId == unwantedPokemonType)
-                    .OrderByDescending(p => Perfect(p)).ThenBy(p => p.Cp).Skip(1);
+                    .OrderByDescending(p => Perfect(p)).ThenBy(p => p.Cp).Skip(1).ToList();
                 //ColoredConsoleWrite(ConsoleColor.White, $"Grinding {unwantedPokemon.Count} pokemons of type {unwantedPokemonType}");
                 await TransferAllGivenPokemons(client, unwantedPokemons);
             }
@@ -680,6 +703,8 @@ namespace PokemonGo.RocketAPI.Window
 
         private async Task TransferAllGivenPokemons(Client client, IEnumerable<PokemonData> unwantedPokemons, float keepPerfectPokemonLimit = 80.0f)
         {
+
+            string language = ClientSettings.Language;
             foreach (var pokemon in unwantedPokemons)
             {
                 //if (Perfect(pokemon) >= keepPerfectPokemonLimit) continue;
@@ -698,7 +723,7 @@ namespace PokemonGo.RocketAPI.Window
                         ERROR_POKEMON_IS_EGG = 4;
                     }*/
                     string pokemonName;
-                    if (ClientSettings.Language == "german")
+                    if (language == "german")
                     {
                         // Dont really need to print this do we? youll know if its German or not
                         //ColoredConsoleWrite(Color.DarkCyan, "german");
@@ -712,6 +737,7 @@ namespace PokemonGo.RocketAPI.Window
                     if (transferPokemonResponse.Status == 1)
                     {
                         ColoredConsoleWrite(Color.Green, $"Pokemon {pokemon.PokemonId} with {pokemon.Cp} CP and IV at {Perfect(pokemon)}% is transfered");
+                        nbPokemons--;
                     }
                     else
                     {
@@ -748,14 +774,14 @@ namespace PokemonGo.RocketAPI.Window
                     {
                         var transfer = await client.TransferPokemon(dubpokemon.Id);
                         string pokemonName;
-                        if (ClientSettings.Language == "german")
-                        {
-                            string name_english = Convert.ToString(dubpokemon.PokemonId);
-                            var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
-                            var response = (HttpWebResponse)request.GetResponse();
-                            pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                        }
-                        else
+                        //if (ClientSettings.Language == "german")
+                        //{
+                        //    string name_english = Convert.ToString(dubpokemon.PokemonId);
+                        //    var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
+                        //    var response = (HttpWebResponse)request.GetResponse();
+                        //    pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                        //}
+                        //else
                             pokemonName = Convert.ToString(dubpokemon.PokemonId);
                         ColoredConsoleWrite(Color.DarkGreen,
                             $"Transferred {pokemonName} with {dubpokemon.Cp} CP (Highest is {dupes.ElementAt(i).Last().value.Cp})");
@@ -787,14 +813,14 @@ namespace PokemonGo.RocketAPI.Window
                     {
                         var transfer = await client.TransferPokemon(dubpokemon.Id);
                         string pokemonName;
-                        if (ClientSettings.Language == "german")
-                        {
-                            string name_english = Convert.ToString(dubpokemon.PokemonId);
-                            var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
-                            var response = (HttpWebResponse)request.GetResponse();
-                            pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                        }
-                        else
+                        //if (ClientSettings.Language == "german")
+                        //{
+                        //    string name_english = Convert.ToString(dubpokemon.PokemonId);
+                        //    var request = (HttpWebRequest)WebRequest.Create("http://boosting-service.de/pokemon/index.php?pokeName=" + name_english);
+                        //    var response = (HttpWebResponse)request.GetResponse();
+                        //    pokemonName = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                        //}
+                        //else
                             pokemonName = Convert.ToString(dubpokemon.PokemonId);
                         ColoredConsoleWrite(Color.DarkGreen,
                             $"Transferred {pokemonName} with {Math.Round(Perfect(dubpokemon))}% IV (Highest is {Math.Round(Perfect(dupes.ElementAt(i).Last().value))}% IV)");

@@ -533,15 +533,15 @@ namespace PokemonGo.RocketAPI
 
         public async Task UseRazzBerry(Client client, ulong encounterId, string spawnPointGuid)
         {
-            IEnumerable<Item> myItems = await GetItems(client);
-            IEnumerable<Item> RazzBerries = myItems.Where(i => (ItemId)i.Item_ == ItemId.ItemRazzBerry);
-            Item RazzBerry = RazzBerries.FirstOrDefault();
-            if (RazzBerry != null)
-            {
+            //IEnumerable<Item> myItems = await GetItems(client);
+            //IEnumerable<Item> RazzBerries = myItems.Where(i => (ItemId)i.Item_ == ItemId.ItemRazzBerry);
+            //Item RazzBerry = RazzBerries.FirstOrDefault();
+            //if (RazzBerry != null && RazzBerry.Count > 0)
+            //{
                 UseItemCaptureRequest useRazzBerry = await client.UseCaptureItem(encounterId, AllEnum.ItemId.ItemRazzBerry, spawnPointGuid);
-                ColoredConsoleWrite(ConsoleColor.Green, $"Using a Razz Berry, we have {RazzBerry.Count} left");
-                await Task.Delay(2000);
-            }
+            //    ColoredConsoleWrite(ConsoleColor.Green, $"Using a Razz Berry, we have {RazzBerry.Count} left");
+            //    //await Task.Delay(2000);
+            //}
         }
 
         public async Task<UseItemRequest> UseItemXpBoost(ItemId itemId)

@@ -34,8 +34,8 @@ namespace PokemonGo.RocketAPI.Extensions
             where TResponsePayload : IMessage<TResponsePayload>, new()
         {
             ByteString payload = null;
-            while (waitingForResponse)
-                await Task.Delay(30);
+            //while (waitingForResponse)
+            //    await Task.Delay(30);
             waitingForResponse = true;
             Response response = null;
             int count = 0;
