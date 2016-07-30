@@ -541,6 +541,7 @@ namespace PokemonGo.RocketAPI.Window
 
 
             } while (!ForceUnbanning && !Stopping);
+            FarmingStops = false;
         }
 
         private async Task ForceUnban(Client client)
