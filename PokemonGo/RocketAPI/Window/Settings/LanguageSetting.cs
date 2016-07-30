@@ -313,7 +313,7 @@ namespace PokemonGo.RocketAPI.Window
 "Draco",
 "Dracolosse",
 "Mewtwo",
-"Mew",
+"Mew" };
 
     }
 }

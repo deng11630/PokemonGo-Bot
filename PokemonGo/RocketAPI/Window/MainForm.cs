@@ -17,8 +17,7 @@ using AllEnum;
 using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.Exceptions;
 using PokemonGo.RocketAPI.Extensions;
-using PokemonGo.RocketAPI.GeneratedCode;
-using PokemonGo.RocketAPI.Window.Settings;
+using PokemonGo.RocketAPI.GeneratedCode;  
 
 namespace PokemonGo.RocketAPI.Window
 {
