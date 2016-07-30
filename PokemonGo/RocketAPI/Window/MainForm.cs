@@ -470,7 +470,7 @@ namespace PokemonGo.RocketAPI.Window
 
         private async Task ExecuteFarmingPokestopsAndPokemons(Client client, IEnumerable<FortData> pokeStops = null)
         {
-            double maxDist = 1;    //max dist in km
+            double maxDist =  99999999;    //max dist in km
 
             double defLatitude = ClientSettings.DefaultLatitude;
             double defLongitude = ClientSettings.DefaultLongitude;
@@ -657,7 +657,7 @@ namespace PokemonGo.RocketAPI.Window
 
             foreach (var unwantedPokemonType in TransfertAndEvolveSetting.toTransfert)
             {
-                var unwantedPokemons = pokemons.Where(p => p.PokemonId == unwantedPokemonType && Perfect(p) > iv)
+                var unwantedPokemons = pokemons.Where(p => p.PokemonId == unwantedPokemonType && Perfect(p) < iv)
                     .OrderByDescending(p => Perfect(p)).ThenBy(p => p.Cp).ToList();
                 //ColoredConsoleWrite(ConsoleColor.White, $"Grinding {unwantedPokemon.Count} pokemons of type {unwantedPokemonType}");
                 await TransferAllGivenPokemons(client, unwantedPokemons);

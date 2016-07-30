@@ -37,6 +37,7 @@ namespace PokemonGo.RocketAPI.Window
             return (float)Math.Sqrt(Math.Pow(lat - lng, 2) + Math.Pow(client.getCurrentLat() - client.getCurrentLong(), 2));
 
          }
+        public static double mpi180 = Math.PI / 180;
         public struct Coordinate
         {
 
@@ -48,7 +49,7 @@ namespace PokemonGo.RocketAPI.Window
             public double latitude;
             public double longitude;
 
-     
+
 
             //returns distance in kilometers 
             public double distanceFrom(Coordinate c2)
@@ -61,10 +62,10 @@ namespace PokemonGo.RocketAPI.Window
                 var lon1 = this.longitude;
 
                 var R = 6371; // km
-                var dLat = (lat2 - lat1) * Math.PI / 180;
-                var dLon = (lon2 - lon1) * Math.PI / 180;
-                lat1 = lat1 * Math.PI / 180;
-                lat2 = lat2 * Math.PI / 180;
+                var dLat = (lat2 - lat1) * mpi180;
+                var dLon = (lon2 - lon1) * mpi180;
+                lat1 = lat1 * mpi180;
+                lat2 = lat2 * mpi180;
 
                 var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
                         Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
