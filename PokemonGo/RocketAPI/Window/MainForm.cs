@@ -659,7 +659,7 @@ namespace PokemonGo.RocketAPI.Window
             foreach (var unwantedPokemonType in TransfertAndEvolveSetting.toTransfert)
             {
                 var unwantedPokemons = pokemons.Where(p => p.PokemonId == unwantedPokemonType && Perfect(p) > iv)
-                    .OrderByDescending(p => Perfect(p)).ThenBy(p => p.Cp).Skip(1).ToList();
+                    .OrderByDescending(p => Perfect(p)).ThenBy(p => p.Cp).ToList();
                 //ColoredConsoleWrite(ConsoleColor.White, $"Grinding {unwantedPokemon.Count} pokemons of type {unwantedPokemonType}");
                 await TransferAllGivenPokemons(client, unwantedPokemons);
             }
