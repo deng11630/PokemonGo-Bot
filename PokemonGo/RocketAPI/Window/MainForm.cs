@@ -403,9 +403,9 @@ namespace PokemonGo.RocketAPI.Window
 
                 string pokemonName;
                 if (language == "german")
-                    pokemonName = LanguageSetting.GermanName[(int)pokemon.PokemonId];
+                    pokemonName = LanguageSetting.GermanName[(int)pokemon.PokemonId - 1];
                 else if (language == "french")
-                    pokemonName = LanguageSetting.frenchPokemons[(int)pokemon.PokemonId];
+                    pokemonName = LanguageSetting.frenchPokemons[(int)pokemon.PokemonId - 1];
                 else
                     pokemonName = Convert.ToString(pokemon.PokemonId);
 
@@ -722,9 +722,9 @@ namespace PokemonGo.RocketAPI.Window
                     }*/
                     string pokemonName;
                     if (language == "german")
-                        pokemonName = LanguageSetting.GermanName[(int)pokemon.PokemonId];
+                        pokemonName = LanguageSetting.GermanName[(int)pokemon.PokemonId - 1];
                     else if (language == "french")
-                        pokemonName = LanguageSetting.frenchPokemons[(int)pokemon.PokemonId];
+                        pokemonName = LanguageSetting.frenchPokemons[(int)pokemon.PokemonId - 1];
                     else
                         pokemonName = Convert.ToString(pokemon.PokemonId);
                     if (transferPokemonResponse.Status == 1)
@@ -768,9 +768,9 @@ namespace PokemonGo.RocketAPI.Window
                         var transfer = await client.TransferPokemon(dubpokemon.Id);
                         string pokemonName;
                         if (language == "german")
-                            pokemonName = LanguageSetting.GermanName[(int)dubpokemon.PokemonId];
+                            pokemonName = LanguageSetting.GermanName[(int)dubpokemon.PokemonId - 1];
                         else if (language == "french")
-                            pokemonName = LanguageSetting.frenchPokemons[(int)dubpokemon.PokemonId];
+                            pokemonName = LanguageSetting.frenchPokemons[(int)dubpokemon.PokemonId - 1];
                         else
                             pokemonName = Convert.ToString(dubpokemon.PokemonId);
                         ColoredConsoleWrite(Color.DarkGreen,
