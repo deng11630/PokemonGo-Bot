@@ -168,6 +168,7 @@ namespace PokemonGo.RocketAPI.Window
 
         private void button1_Click(object sender, EventArgs e)
         {
+            SaveOnVariables();
             StringWriter sw = new StringWriter();
             allPkm.TableName = "Poke";
             allPkm.Columns.RemoveAt(1);
@@ -175,7 +176,6 @@ namespace PokemonGo.RocketAPI.Window
             ReadSettings.poke = sw.ToString();
             Settings.Instance.SetSetting(sw.ToString(), "Poke");
             sw.Dispose();
-            SaveOnVariables();
             Close();
         }
 
@@ -186,17 +186,17 @@ namespace PokemonGo.RocketAPI.Window
             CatchesEvolveTransfersSettings.toNotCatch.Clear();
             foreach (DataRow pkm in allPkm.Rows)
             {
-                if ((bool)pkm[2])
+                if ((bool)pkm[3])
                 {
                     CatchesEvolveTransfersSettings.toEvolve.Add((PokemonId)((int)pkm[0]));
                 }
 
-                if ((bool)pkm[3])
+                if ((bool)pkm[4])
                 {
                     CatchesEvolveTransfersSettings.toTransfert.Add((PokemonId)((int)pkm[0]));
                 }
 
-                if (!(bool)pkm[4])
+                if (!(bool)pkm[5])
                 {
                     CatchesEvolveTransfersSettings.toNotCatch.Add((PokemonId)((int)pkm[0]));
                 }
