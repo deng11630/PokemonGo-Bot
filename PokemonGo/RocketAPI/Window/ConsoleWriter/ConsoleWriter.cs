@@ -39,9 +39,9 @@ namespace PokemonGo.RocketAPI.Window
         {
             string pokemonName;
             if (ReadSettings.language == "german")
-                pokemonName = LanguageSetting.GermanName[(int)pokemon.PokemonId - 1];
+                pokemonName = LanguageSetting.GermanName[(int)pokemon.PokemonId];
             else if (ReadSettings.language == "french")
-                pokemonName = LanguageSetting.frenchPokemons[(int)pokemon.PokemonId - 1];
+                pokemonName = LanguageSetting.frenchPokemons[(int)pokemon.PokemonId];
             else
                 pokemonName = Convert.ToString(pokemon.PokemonId);
             if (transferPokemonResponse.Status == 1)
@@ -55,9 +55,9 @@ namespace PokemonGo.RocketAPI.Window
         {
             string pokemonName;
             if (ReadSettings.language == "german")
-                pokemonName = LanguageSetting.GermanName[(int)pokemon.PokemonId - 1];
+                pokemonName = LanguageSetting.GermanName[(int)pokemon.PokemonId];
             else if (ReadSettings.language == "french")
-                pokemonName = LanguageSetting.frenchPokemons[(int)pokemon.PokemonId - 1];
+                pokemonName = LanguageSetting.frenchPokemons[(int)pokemon.PokemonId];
             else
                 pokemonName = Convert.ToString(pokemon.PokemonId);
 

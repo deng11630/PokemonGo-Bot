@@ -58,6 +58,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pokémonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
@@ -104,7 +105,8 @@
             this.startStopBotToolStripMenuItem,
             this.todoToolStripMenuItem,
             this.useLuckyEggToolStripMenuItem,
-            this.forceUnbanToolStripMenuItem});
+            this.forceUnbanToolStripMenuItem,
+            this.pokémonToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1012, 24);
@@ -347,6 +349,13 @@
             this.tabPage2.Text = ":3";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // pokémonToolStripMenuItem
+            // 
+            this.pokémonToolStripMenuItem.Name = "pokémonToolStripMenuItem";
+            this.pokémonToolStripMenuItem.Size = new System.Drawing.Size(70, 20);
+            this.pokémonToolStripMenuItem.Text = "Pokémon";
+            this.pokémonToolStripMenuItem.Click += new System.EventHandler(this.pokémonToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -410,5 +419,6 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.RichTextBox logTextBox;
+        private System.Windows.Forms.ToolStripMenuItem pokémonToolStripMenuItem;
     }
 }

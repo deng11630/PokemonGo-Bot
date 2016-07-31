@@ -29,6 +29,8 @@ namespace PokemonGo.RocketAPI.Window
         public static int waitForUnlock;
         public static bool instantMoove;
         public static int transfertWait;
+        public static int imageSize;
+        public static string poke;
 
 
         public static void Load(Settings settings)
@@ -53,6 +55,8 @@ namespace PokemonGo.RocketAPI.Window
             language = settings.Language;
             transferType = settings.TransferType;
             maxPokemonsOnInventory = 220;
+            imageSize = settings.ImageSize;
+            poke = settings.Poke;
         }
 
     }

@@ -553,6 +553,10 @@ namespace PokemonGo.RocketAPI.Window
             mForm.Show();
         }
 
-
+        private void pokémonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var pokemonList = new PokemonList();
+            pokemonList.Show();
+        }
     }
 }

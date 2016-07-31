@@ -102,11 +102,13 @@ namespace PokemonGo.RocketAPI.Window
 
         public int RecycleItemsInterval => GetSetting() != string.Empty ? Convert.ToInt16(GetSetting()) : 60;
 
-        public string Language => GetSetting() != string.Empty ? GetSetting() : "english";
+        public string Language => GetSetting() != string.Empty ? GetSetting() : "en";
 
         public string RazzBerryMode => GetSetting() != string.Empty ? GetSetting() : "cp";
 
         public double RazzBerrySetting => GetSetting() != string.Empty ? double.Parse(GetSetting(), CultureInfo.InvariantCulture) : 500;
+
+        public string Poke => GetSetting() != string.Empty ? GetSetting() : "";
 
         public string GoogleRefreshToken
         {
