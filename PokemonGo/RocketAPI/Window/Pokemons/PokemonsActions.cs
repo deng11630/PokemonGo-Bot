@@ -203,7 +203,7 @@ namespace PokemonGo.RocketAPI.Window
             farmingPokemons = true;
             foreach (var pokemon in pokemons)
             {
-                if (MainForm.forceUnbanning || MainForm.stopping)
+                if (MainForm.unbanning || MainForm.stop)
                     break;
                 var encounterPokemonResponse = await client.EncounterPokemon(pokemon.EncounterId, pokemon.SpawnpointId);
                 var pokemonCP = encounterPokemonResponse?.WildPokemon?.PokemonData?.Cp;

@@ -89,7 +89,7 @@ namespace PokemonGo.RocketAPI.Window
                     fortSearch = await client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     ConsoleWriter.PrintPokestopTakeInfos(fortInfo, fortSearch);
                 }
-                while (fortSearch.ExperienceAwarded == 0 && !MainForm.forceUnbanning && !MainForm.stopping);
+                while (fortSearch.ExperienceAwarded == 0 && !MainForm.unbanning && !MainForm.stop);
                 pokeStop.CooldownCompleteTimestampMs = DateTime.UtcNow.AddMinutes(5).ToUnixTime();
                 var pokeStopMapObjects = await client.GetMapObjects();
 
@@ -104,7 +104,7 @@ namespace PokemonGo.RocketAPI.Window
                     await PokemonActions.ExecuteCatchAllNearbyPokemons(pokeStopMapObjects);
 
 
-            } while (!MainForm.forceUnbanning && !MainForm.stopping);
+            } while (!MainForm.unbanning && !MainForm.stop);
             farmingStops = false;
         }
 
@@ -144,14 +144,14 @@ namespace PokemonGo.RocketAPI.Window
                     fortSearch = await client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     ConsoleWriter.PrintPokestopTakeInfos(fortInfo, fortSearch);
                 }
-                while (fortSearch.ExperienceAwarded == 0 && !MainForm.forceUnbanning && !MainForm.stopping);
+                while (fortSearch.ExperienceAwarded == 0 && !MainForm.unbanning && !MainForm.stop);
                 pokeStop.CooldownCompleteTimestampMs = DateTime.UtcNow.AddMinutes(5).ToUnixTime();
                 var pokeStopMapObjects = await client.GetMapObjects(); 
                 if (ReadSettings.catchPokemon)
                     await PokemonActions.ExecuteCatchAllNearbyPokemons(pokeStopMapObjects);
 
 
-            } while (!MainForm.forceUnbanning && !MainForm.stopping);
+            } while (!MainForm.unbanning && !MainForm.stop);
             farmingStops = false;
         }
 
@@ -187,7 +187,7 @@ namespace PokemonGo.RocketAPI.Window
                     fortSearch = await client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     ConsoleWriter.PrintPokestopTakeInfos(fortInfo, fortSearch);
                 }
-                while (fortSearch.ExperienceAwarded == 0 && !MainForm.forceUnbanning && !MainForm.stopping);
+                while (fortSearch.ExperienceAwarded == 0 && !MainForm.unbanning && !MainForm.stop);
                 pokeStop.CooldownCompleteTimestampMs = DateTime.UtcNow.AddMinutes(5).ToUnixTime();
                 var pokeStopMapObjects = await client.GetMapObjects();
 
@@ -199,7 +199,7 @@ namespace PokemonGo.RocketAPI.Window
                     await PokemonActions.ExecuteCatchAllNearbyPokemons(pokeStopMapObjects);
 
 
-            } while (!MainForm.forceUnbanning && !MainForm.stopping);
+            } while (!MainForm.unbanning && !MainForm.stop);
             farmingStops = false;
         }
 
@@ -234,14 +234,14 @@ namespace PokemonGo.RocketAPI.Window
                     fortSearch = await client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     ConsoleWriter.PrintPokestopTakeInfos(fortInfo, fortSearch);
                 }
-                while (fortSearch.ExperienceAwarded == 0 && !MainForm.forceUnbanning && !MainForm.stopping);
+                while (fortSearch.ExperienceAwarded == 0 && !MainForm.unbanning && !MainForm.stop);
                 var pokeStopMapObjects = await client.GetMapObjects();
                 pokeStops =  pokeStopMapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint).ToList();
                 if (ReadSettings.catchPokemon)
                     await PokemonActions.ExecuteCatchAllNearbyPokemons(pokeStopMapObjects);
 
 
-            } while (!MainForm.forceUnbanning && !MainForm.stopping);
+            } while (!MainForm.unbanning && !MainForm.stop);
             farmingStops = false;
         }
 

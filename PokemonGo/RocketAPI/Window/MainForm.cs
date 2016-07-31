@@ -26,21 +26,18 @@ namespace PokemonGo.RocketAPI.Window
     {
 
         public static int totalExperience = 0;
-        public static bool forceUnbanning = false;
-        public static bool stopping = false;
+        public static bool unbanning = false;
+        public static bool stop = false;
+        public static bool stopInventoryActions = false;
         public static MainForm instance;
         public static ISettings ClientSettings;
-        public static int Currentlevel = -1;
-        private static int TotalExperience = 0;
+        public static int Currentlevel = -1;     
         public static GetPlayerResponse profile;
         private static DateTime TimeStarted = DateTime.Now;
-        public static DateTime InitSessionDateTime = DateTime.Now;
-        private static bool stopPrintLevel = false;
+        public static DateTime InitSessionDateTime = DateTime.Now;  
         public static bool connected = false;
-        private Task recycle = null;
-        private Task printLevel = null;
         public static Client client;
-        LocationManager locationManager;
+        public static Task inventoryActions;   
 
         private async void Execute()
         {
@@ -54,25 +51,23 @@ namespace PokemonGo.RocketAPI.Window
                 profile = await client.GetProfile();
                 var settings = await client.GetSettings();
                 ConsoleWriter.WriteProfile(profile);
-                InventoryActions(2000, 10);
-                connected = true;
-                client.stopRecycle = false;
-                stopPrintLevel = false;
+                inventoryActions = InventoryActions(2000, 10);
+                connected = true;       
                 await Movements.GoWhereYouWantButFarmStock(client);
-                await UnbannedCheck();
+                await ForceUnban(client);
             }
             catch (TaskCanceledException)
             {
-                ConsoleWriter.ColoredConsoleWrite(Color.Red, "Task Canceled Exception - Restarting"); if (!stopping) await Restart(client);
+                ConsoleWriter.ColoredConsoleWrite(Color.Red, "Task Canceled Exception - Restarting");  Restart(client);
             }
             catch (UriFormatException)
             {
-                ConsoleWriter.ColoredConsoleWrite(Color.Red, "System URI Format Exception - Restarting"); if (!stopping) await Restart(client);
+                ConsoleWriter.ColoredConsoleWrite(Color.Red, "System URI Format Exception - Restarting");   Restart(client);
             }
-            catch (ArgumentOutOfRangeException) { ConsoleWriter.ColoredConsoleWrite(Color.Red, "ArgumentOutOfRangeException - Restarting"); if (!stopping) await Restart(client); }
-            catch (ArgumentNullException) { ConsoleWriter.ColoredConsoleWrite(Color.Red, "Argument Null Refference - Restarting"); if (!stopping) await Restart(client); }
-            catch (NullReferenceException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Null Refference - Restarting"); if (!stopping) await Restart(client); }
-            catch (Exception ex) { ConsoleWriter.ColoredConsoleWrite(Color.Red, ex.ToString()); if (!stopping) await Restart(client); }
+            catch (ArgumentOutOfRangeException) { ConsoleWriter.ColoredConsoleWrite(Color.Red, "ArgumentOutOfRangeException - Restarting"); await Restart(client); }
+            catch (ArgumentNullException) { ConsoleWriter.ColoredConsoleWrite(Color.Red, "Argument Null Refference - Restarting");  Restart(client); }
+            catch (NullReferenceException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Null Refference - Restarting");  Restart(client); }
+            catch (Exception ex) { ConsoleWriter.ColoredConsoleWrite(Color.Red, ex.ToString()); Restart(client); }
         }
 
 
@@ -122,37 +117,15 @@ namespace PokemonGo.RocketAPI.Window
         }
 
 
-        private async Task UnbannedCheck()
-        {
-            while (forceUnbanning)
-                await Task.Delay(25);
-            // await ForceUnban(client);
-            if (!stopping)
-            {
-                ConsoleWriter.ColoredConsoleWrite(Color.Red, $"No nearby useful locations found. Please wait 10 seconds.");
-                await Task.Delay(10000);
-                Restart(client);
-            }
-            else
-            {
-                ConsoleClear();
-                ConsoleWriter.ColoredConsoleWrite(Color.Red, $"Bot successfully stopped.");
-                startStopBotToolStripMenuItem.Text = "Start";
-                stopping = false;
-                bot_started = false;
-            }
-        }
-
-
         private async Task Restart(Client client)
         {
-            client.stopRecycle = true;
-            stopPrintLevel = true;
-            if (recycle != null)
-                await recycle;
-            if (printLevel != null)
-                await printLevel;
-            Execute();
+
+            stopInventoryActions = true;
+            await inventoryActions;
+            stopInventoryActions = false;
+            ConsoleWriter.ColoredConsoleWrite(Color.Red, "Bot stopped.");
+            if (!stop)
+                Execute();
         }
 
 
@@ -185,7 +158,8 @@ namespace PokemonGo.RocketAPI.Window
             ConsoleWriter.PrintLevel(client, Inventory.inventory);
             PokemonActions.EvolveAndTransfert(client, Inventory.inventory);
             await Task.Delay(delay);
-            InventoryActions(delay, nb);
+            if (!stopInventoryActions)
+                InventoryActions(delay, nb);
         }
 
         private static string CallAPI(string elem, double lat, double lon)
@@ -232,50 +206,45 @@ namespace PokemonGo.RocketAPI.Window
 
         private async Task ForceUnban(Client client)
         {
-            if (!forceUnbanning && !stopping)
+            if (!unbanning)
+                return;
+            await Task.Delay(5000);
+            unbanning = false;
+            ConsoleWriter.ColoredConsoleWrite(Color.LightGreen, "Starting force unban...");
+
+
+            var mapObjects = await client.GetMapObjects();
+            var pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint && i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime()).ToList();
+            bool done = false;
+            foreach (var pokeStop in pokeStops)
             {
-                ConsoleWriter.ColoredConsoleWrite(Color.LightGreen, "Waiting for last farming action to be complete...");
-                forceUnbanning = true;
-                while (Movements.farmingStops || PokemonActions.farmingPokemons)
-                    await Task.Delay(1);
 
-                ConsoleWriter.ColoredConsoleWrite(Color.LightGreen, "Starting force unban...");
-                var mapObjects = await client.GetMapObjects();
-                var pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint && i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime());
-                await Task.Delay(10000);
-                bool done = false;
-                foreach (var pokeStop in pokeStops)
+                double pokeStopDistance = Movements.locationManager.getDistance(pokeStop.Latitude, pokeStop.Longitude);
+                await Movements.locationManager.update(pokeStop.Latitude, pokeStop.Longitude);
+                var fortInfo = await client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                if (fortInfo.Name != string.Empty)
                 {
-
-                    double pokeStopDistance = locationManager.getDistance(pokeStop.Latitude, pokeStop.Longitude);
-                    await locationManager.update(pokeStop.Latitude, pokeStop.Longitude);
-                    var fortInfo = await client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-
-                    if (fortInfo.Name != string.Empty)
+                    ConsoleWriter.ColoredConsoleWrite(Color.LightGreen, "Chosen PokeStop " + fortInfo.Name + " for force unban");
+                    for (int i = 1; i <= 50; i++)
                     {
-                        ConsoleWriter.ColoredConsoleWrite(Color.LightGreen, "Chosen PokeStop " + fortInfo.Name + " for force unban");
-                        for (int i = 1; i <= 50; i++)
+                        var fortSearch = await client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+                        if (fortSearch.ExperienceAwarded == 0)
+                            ConsoleWriter.ColoredConsoleWrite(Color.LightGreen, "Attempt: " + i);
+                        else
                         {
-                            var fortSearch = await client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                            if (fortSearch.ExperienceAwarded == 0)
-                                ConsoleWriter.ColoredConsoleWrite(Color.LightGreen, "Attempt: " + i);
-                            else
-                            {
-                                ConsoleWriter.ColoredConsoleWrite(Color.LightGreen, "Fuck yes, you are now unbanned! Total attempts: " + i);
-                                done = true;
-                                break;
-                            }
+                            ConsoleWriter.ColoredConsoleWrite(Color.LightGreen, "Fuck yes, you are now unbanned! Total attempts: " + i);
+                            done = true;
+                            break;
                         }
                     }
-
-                    if (!done)
-                        ConsoleWriter.ColoredConsoleWrite(Color.LightGreen, "Force unban failed, please try again.");
-                    forceUnbanning = false;
-                    break;
                 }
-                return;
+
+                if (!done)
+                    ConsoleWriter.ColoredConsoleWrite(Color.White, "Force unban failed, please try again.");
+                else
+                    break;
             }
-            ConsoleWriter.ColoredConsoleWrite(Color.Red, "A action is in play... Please wait.");
+            await Restart(client);
         }
 
 
@@ -333,9 +302,10 @@ namespace PokemonGo.RocketAPI.Window
             }
             else
             {
-                if (!forceUnbanning)
+                stop = true;
+                stopInventoryActions = true;
+                if (!unbanning)
                 {
-                    stopping = true;
                     ConsoleWriter.ColoredConsoleWrite(Color.Red, $"Stopping the bot.. Waiting for the last action to be complete.");
                 }
                 else
@@ -392,10 +362,8 @@ namespace PokemonGo.RocketAPI.Window
         {
             if (client != null)
             {
-                if (forceUnbanning)
-                    ConsoleWriter.ColoredConsoleWrite(Color.Red, "A force unban attempt is in action... Please wait.");
-                else
-                    await ForceUnban(client);
+                unbanning = true;
+                ConsoleWriter.ColoredConsoleWrite(Color.Red, "Start unban. Please wait while we stop the bot.");
             }
             else
                 ConsoleWriter.ColoredConsoleWrite(Color.Red, "Please start the bot before trying to force unban");
