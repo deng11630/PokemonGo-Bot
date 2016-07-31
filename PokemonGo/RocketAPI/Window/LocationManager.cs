@@ -23,11 +23,11 @@ namespace PokemonGo.RocketAPI.Window
             return currentLoc.distanceFrom(new Coordinate(lat, lng));
         }
 
-        public async Task<int> update(double lat, double lng)
+        public async Task update(double lat, double lng)
         {
-            double waitTime = getDistance(lat, lng) * 1200000f;
+            Map.UpdatePlayerLocation(lat, lng);       
             await client.UpdatePlayerLocation(lat, lng);
-            return (int)Math.Ceiling(waitTime);
+            return ;
         }
 
 

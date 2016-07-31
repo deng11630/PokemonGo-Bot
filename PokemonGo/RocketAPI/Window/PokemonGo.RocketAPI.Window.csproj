@@ -52,6 +52,14 @@
       <HintPath>..\..\..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\ObjectListView.Official.2.9.1\lib\net20\ObjectListView.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="S2Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\S2Geometry.1.0.3\lib\portable-net45+wp8+win8\S2Geometry.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -71,7 +79,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Inventory\Inventory.cs" />
+    <Compile Include="Maps\Map.cs" />
+    <Compile Include="Maps\S2GMapDrawer.cs" />
     <Compile Include="Movements\Movements.cs" />
+    <Compile Include="Movements\RouteOptimizer.cs" />
     <Compile Include="Pokemons\PokemonsActions.cs" />
     <Compile Include="Settings\EvolveAndTransfertSetting.cs" />
     <Compile Include="LocationManager.cs" />

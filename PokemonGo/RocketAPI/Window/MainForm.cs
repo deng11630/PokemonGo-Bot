@@ -1,15 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.Generic; 
 using System.Data;
-using System.Drawing;
-using System.Globalization;
+using System.Drawing;       
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
+using System.Net;                   
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -17,14 +12,15 @@ using AllEnum;
 using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.Exceptions;
 using PokemonGo.RocketAPI.Extensions;
-using PokemonGo.RocketAPI.GeneratedCode;
-using PokemonGo.RocketAPI.Window;
+using PokemonGo.RocketAPI.GeneratedCode; 
+using System.Threading;     
+using BrightIdeasSoftware;
 
 namespace PokemonGo.RocketAPI.Window
 {
     public partial class MainForm : Form
     {
-
+        public static SynchronizationContext synchronizationContext;
         public static int totalExperience = 0;
         public static bool unbanning = false;
         public static bool stop = false;
@@ -37,7 +33,151 @@ namespace PokemonGo.RocketAPI.Window
         public static DateTime InitSessionDateTime = DateTime.Now;  
         public static bool connected = false;
         public static Client client;
-        public static Task inventoryActions;   
+        public static Task inventoryActions;
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            Map.Load(gMapControl1);
+            InitializePokemonForm();
+        }
+
+
+
+        private void InitializePokemonForm()
+        {
+            objectListView1.ButtonClick += PokemonListButton_Click;
+
+            pkmnName.ImageGetter = delegate (object rowObject)
+            {
+                PokemonData pokemon = (PokemonData)rowObject;
+
+                String key = pokemon.PokemonId.ToString();
+                if (!objectListView1.SmallImageList.Images.ContainsKey(key))
+                {
+                    Image img = GetPokemonImage((int)pokemon.PokemonId);
+                    objectListView1.SmallImageList.Images.Add(key, img);
+                }
+                return key;
+            };
+
+            objectListView1.CellToolTipShowing += delegate (object sender, ToolTipShowingEventArgs args)
+            {
+                PokemonData pokemon = (PokemonData)args.Model;
+                if (args.ColumnIndex == 8)
+                {
+                    int candyOwned = Inventory.GetFamilies()
+                            .Where(i => (int)i.FamilyId <= (int)pokemon.PokemonId)
+                            .Select(f => f.Candy)
+                            .First();
+                    args.Text = candyOwned + " Candy";
+                }
+            };
+        }
+
+
+        private Image GetPokemonImage(int pokemonId)
+        {
+            var Sprites = AppDomain.CurrentDomain.BaseDirectory + "Sprites\\";
+            string location = Sprites + pokemonId + ".png";
+            if (!Directory.Exists(Sprites))
+                Directory.CreateDirectory(Sprites);
+            if (!File.Exists(location))
+            {
+                WebClient wc = new WebClient();
+                wc.DownloadFile("http://pokeapi.co/media/sprites/pokemon/" + pokemonId + ".png", @location);
+            }
+            return Image.FromFile(location);
+        }
+
+        private void PokemonListButton_Click(object sender, CellClickEventArgs e)
+        {
+            try
+            {
+                PokemonData pokemon = (PokemonData)e.Model;
+                if (e.ColumnIndex == 6)
+                {
+                    TransferPokemon(pokemon);
+                }
+                else if (e.ColumnIndex == 7)
+                {
+                    PowerUpPokemon(pokemon);
+                }
+                else if (e.ColumnIndex == 8)
+                {
+                    EvolvePokemon(pokemon);
+                }
+            }
+            catch (Exception ex) { ConsoleWriter.ColoredConsoleWrite(Color.Red, ex.ToString()); client = null; ReloadPokemonList(); }
+        }
+
+
+        private async void TransferPokemon(PokemonData pokemon)
+        {
+            if (MessageBox.Show($"Are you sure you want to transfer {pokemon.PokemonId.ToString()} with {pokemon.Cp} CP?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                var transferPokemonResponse = await client.TransferPokemon(pokemon.Id);
+                string message = "";
+                string caption = "";
+
+                if (transferPokemonResponse.Status == 1)
+                {
+                    message = $"{pokemon.PokemonId} was transferred\n{transferPokemonResponse.CandyAwarded} candy awarded";
+                    caption = $"{pokemon.PokemonId} transferred";
+                    ReloadPokemonList();
+                }
+                else
+                {
+                    message = $"{pokemon.PokemonId} could not be transferred";
+                    caption = $"Transfer {pokemon.PokemonId} failed";
+                }
+
+                MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private async void PowerUpPokemon(PokemonData pokemon)
+        {
+            var evolvePokemonResponse = await client.PowerUp(pokemon.Id);
+            string message = "";
+            string caption = "";
+
+            if (evolvePokemonResponse.Result == 1)
+            {
+                message = $"{pokemon.PokemonId} successfully upgraded.";
+                caption = $"{pokemon.PokemonId} upgraded";
+                ReloadPokemonList();
+            }
+            else
+            {
+                message = $"{pokemon.PokemonId} could not be upgraded";
+                caption = $"Upgrade {pokemon.PokemonId} failed";
+            }
+
+            MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private async void EvolvePokemon(PokemonData pokemon)
+        {
+            var evolvePokemonResponse = await client.EvolvePokemon(pokemon.Id);
+            string message = "";
+            string caption = "";
+
+            if (evolvePokemonResponse.Result == 1)
+            {
+                message = $"{pokemon.PokemonId} successfully evolved into {evolvePokemonResponse.EvolvedPokemon.PokemonType}\n{evolvePokemonResponse.ExpAwarded} experience awarded\n{evolvePokemonResponse.CandyAwarded} candy awarded";
+                caption = $"{pokemon.PokemonId} evolved into {evolvePokemonResponse.EvolvedPokemon.PokemonType}";
+                ReloadPokemonList();
+            }
+            else
+            {
+                message = $"{pokemon.PokemonId} could not be evolved";
+                caption = $"Evolve {pokemon.PokemonId} failed";
+            }
+
+            MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
 
         private async void Execute()
         {
@@ -53,7 +193,7 @@ namespace PokemonGo.RocketAPI.Window
                 ConsoleWriter.WriteProfile(profile);
                 inventoryActions = InventoryActions(2000, 10);
                 connected = true;       
-                await Movements.GoWhereYouWantButFarmStock(client);
+                await Movements.TEST(client);
                 await ForceUnban(client);
             }
             catch (TaskCanceledException)
@@ -64,16 +204,17 @@ namespace PokemonGo.RocketAPI.Window
             {
                 ConsoleWriter.ColoredConsoleWrite(Color.Red, "System URI Format Exception - Restarting");   Restart(client);
             }
-            catch (ArgumentOutOfRangeException) { ConsoleWriter.ColoredConsoleWrite(Color.Red, "ArgumentOutOfRangeException - Restarting"); await Restart(client); }
-            catch (ArgumentNullException) { ConsoleWriter.ColoredConsoleWrite(Color.Red, "Argument Null Refference - Restarting");  Restart(client); }
+            catch (ArgumentOutOfRangeException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "ArgumentOutOfRangeException - Restarting"); await Restart(client); }
+            catch (ArgumentNullException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Argument Null Refference - Restarting");  Restart(client); }
             catch (NullReferenceException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Null Refference - Restarting");  Restart(client); }
-            catch (Exception ex) { ConsoleWriter.ColoredConsoleWrite(Color.Red, ex.ToString()); Restart(client); }
+            catch (Exception e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, e.ToString()); Restart(client); }
         }
 
 
         public MainForm()
         {
             instance = this;
+            synchronizationContext = SynchronizationContext.Current;
             ReadSettings.Load(Settings.Instance);
             ClientSettings = Settings.Instance;
             InitializeComponent();
@@ -385,6 +526,24 @@ namespace PokemonGo.RocketAPI.Window
             var pForm = new PokeUi();
             pForm.Show();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ReloadPokemonList();
+        }
+
+        private async void ReloadPokemonList()
+        {
+            button1.Enabled = false;
+            objectListView1.Enabled = false;
+            var currentScrollPosition = objectListView1.LowLevelScrollPosition;
+            objectListView1.SetObjects(Inventory.pokemons);
+            objectListView1.LowLevelScroll(currentScrollPosition.X, currentScrollPosition.Y);
+            button1.Enabled = true;
+            objectListView1.Enabled = true;
+        }
+
+
 
         private void mapToolStripMenuItem_Click(object sender, EventArgs e)
         {

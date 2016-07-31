@@ -13,6 +13,7 @@ namespace PokemonGo.RocketAPI.Window
     {
         public static List<PokemonData> pokemons;
         public static GetInventoryResponse inventory;
+        public static List<PokemonFamily> families;
         public static List<Item> items;
         public static int razzBerry = 0;
         public static int nbPokemons = 0;
@@ -21,6 +22,16 @@ namespace PokemonGo.RocketAPI.Window
         public static int ultraBallsCount = 0;
         public static int masterBallsCount = 0;
 
+
+
+        public static List<PokemonFamily> GetFamilies()
+        {
+            return inventory.InventoryDelta.InventoryItems
+                    .Select(i => i.InventoryItemData?.PokemonFamily)
+                    .Where(p => p != null && (int)p?.FamilyId > 0)
+                    .OrderByDescending(p => (int)p.FamilyId).ToList();
+        }
+
         public static async Task UpdateInventory(Client client)
         {
             inventory = await client.GetInventory();
@@ -28,8 +39,7 @@ namespace PokemonGo.RocketAPI.Window
             nbPokemons = pokemons.Count;
             items = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Item).Where(p => p != null).ToList();
             razzBerry = items.Where(i => (ItemId)i.Item_ == ItemId.ItemRazzBerry).Count();
-
-
+ 
             var pokeballsRequest = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Item)
                 .Where(p => p != null)
                 .GroupBy(i => (MiscEnums.Item)i.Item_)

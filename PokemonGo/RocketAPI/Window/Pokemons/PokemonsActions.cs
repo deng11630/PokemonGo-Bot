@@ -17,9 +17,10 @@ namespace PokemonGo.RocketAPI.Window
         public static int nbCatchs = 0;
         public static bool farmingPokemons = false;
         public static  Client client;
-        public static bool OntransfertEvolve = false; 
-          
-  
+        public static bool OntransfertEvolve = false;
+        public static List<WildPokemon> wildPokemons;
+
+
 
 
         public static async Task<bool> EvolvePokemon(PokemonData pokemon)
