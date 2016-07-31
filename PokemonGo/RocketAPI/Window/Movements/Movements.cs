@@ -164,7 +164,7 @@ namespace PokemonGo.RocketAPI.Window
             FortSearchResponse fortSearch;
             var mapObjects = await client.GetMapObjects();
             var pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint).ToList();
-            pokeStops = RouteOptimizer.Optimize(pokeStops, client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
+            pokeStops = RouteOptimizer.Optimize(pokeStops.ToArray(), client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
             ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel the world and save every pokestops !!");
             double traveledDistance = 0;
             if (!ConsoleWriter.PokestopFarmStart(pokeStops))
@@ -211,9 +211,13 @@ namespace PokemonGo.RocketAPI.Window
         }
 
 
+        public static long CooldownTimeLeft(FortData pokestop)
+        {
+            return pokestop.CooldownCompleteTimestampMs - DateTime.UtcNow.ToUnixTime();
+        }
 
 
-        public static async Task TEST(Client client)
+        public static async Task FarmAllWithSaving(Client client)
         {
 
             farmingStops = true;
@@ -221,19 +225,19 @@ namespace PokemonGo.RocketAPI.Window
             var mapObjects = await client.GetMapObjects();
             if (pokeStops.Count < 1)
                 pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint).ToList();
-            pokeStops = RouteOptimizer.Optimize(pokeStops, client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
+            if (!ConsoleWriter.PokestopFarmStart(pokeStops))
+                return;
+            pokeStops = RouteOptimizer.Optimize(pokeStops.ToArray(), client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
             PokemonActions.wildPokemons = mapObjects.MapCells.SelectMany(i => i.WildPokemons).ToList();
             ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel the world and save every pokestops !!");
             double traveledDistance = 0;
-            if (!ConsoleWriter.PokestopFarmStart(pokeStops))
-                return;
+
             var nextPokestopsTravel = new List<FortData>(pokeStops);
             foreach (var pokeStop in pokeStops)
             {
                 Map.UpdateMap();
+                if (CooldownTimeLeft(pokeStop) > 30) continue;
                 traveledDistance = distanceFrom(pokeStop.Latitude, pokeStop.Longitude, client.getCurrentLat(), client.getCurrentLong());
-                if (pokeStop == null)
-                    return;
                 await locationManager.update(pokeStop.Latitude, pokeStop.Longitude);
                 var fortInfo = await client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                 int wait = ReadSettings.waitForUnlock;
@@ -259,11 +263,14 @@ namespace PokemonGo.RocketAPI.Window
                     .ToList());
                 if (ReadSettings.catchPokemon)
                     await PokemonActions.ExecuteCatchAllNearbyPokemons(pokeStopMapObjects);
-
+                if (MainForm.unbanning || MainForm.stop)
+                {
+                    farmingStops = false;
+                    return;
+                }
             }
-            farmingStops = false;
             pokeStops = nextPokestopsTravel;
-            await TEST(client);
+            await FarmAllWithSaving(client);
         }
 
         public static async Task GoWhereYouWantButFarm(Client client)

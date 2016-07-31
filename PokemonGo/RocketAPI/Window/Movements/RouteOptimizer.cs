@@ -14,7 +14,7 @@ namespace PokemonGo.RocketAPI.Window
     {
         public static double mPI180 = Math.PI / 180;
 
-        public static List<FortData> Optimize(List<FortData> pokeStops, double lat, double lng, GMapOverlay routeOverlay)
+        public static List<FortData> Optimize(FortData[] pokeStops, double lat, double lng, GMapOverlay routeOverlay)
         {
             List<FortData> optimizedRoute = new List<FortData>(pokeStops);
 
@@ -22,7 +22,7 @@ namespace PokemonGo.RocketAPI.Window
             FortData NN = FindNN(optimizedRoute, lat, lng);
             optimizedRoute.Remove(NN);
             optimizedRoute.Insert(0, NN);
-            for (int i = 1; i < pokeStops.Count; i++)
+            for (int i = 1; i < pokeStops.Length; i++)
             {
                 NN = FindNN(optimizedRoute.Skip(i), NN.Latitude, NN.Longitude);
                 optimizedRoute.Remove(NN);
@@ -52,7 +52,6 @@ namespace PokemonGo.RocketAPI.Window
                 foreach (var pokeStop in p)
                 {
                     var pokeStopLoc = new PointLatLng(pokeStop.Latitude, pokeStop.Longitude);
-
                     routePoint.Add(pokeStopLoc);
                 }
                 routeOverlay.Routes.Clear();

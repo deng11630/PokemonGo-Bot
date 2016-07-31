@@ -105,11 +105,8 @@ namespace PokemonGo.RocketAPI.Window
             MainForm.synchronizationContext.Post(new SendOrPostCallback(o =>
             {
                 playerMarker.Position = (PointLatLng)o;
-
                 searchAreaOverlay.Polygons.Clear();
-
-            }), new PointLatLng(latitude, longitude));
-            ConsoleWriter.ColoredConsoleWrite(Color.Gray, $"Moving player location to Lat: {latitude}, Lng: {longitude}");
+            }), new PointLatLng(latitude, longitude));       
         }
 
     }

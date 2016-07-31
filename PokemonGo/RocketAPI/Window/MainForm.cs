@@ -181,6 +181,8 @@ namespace PokemonGo.RocketAPI.Window
 
         private async void Execute()
         {
+            unbanning = false;
+            stop = false;
             client = new Client(ClientSettings);
             PokemonActions.client = client;
             Movements.locationManager = new LocationManager(client, ClientSettings.TravelSpeed);
@@ -193,7 +195,7 @@ namespace PokemonGo.RocketAPI.Window
                 ConsoleWriter.WriteProfile(profile);
                 inventoryActions = InventoryActions(2000, 10);
                 connected = true;       
-                await Movements.TEST(client);
+                await Movements.FarmAllWithSaving(client);
                 await ForceUnban(client);
             }
             catch (TaskCanceledException)
