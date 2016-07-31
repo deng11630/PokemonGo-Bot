@@ -17,7 +17,7 @@ namespace PokemonGo.RocketAPI.Window
         {
             try
             {
-                ColoredConsoleWrite(Color.Green, "Your version is 3.0.0");
+                ColoredConsoleWrite(Color.Green, "Your version is 3.0.1");
                 ColoredConsoleWrite(Color.Green, "You can find it at www.github.com/mfron/Pokemon-Go-Bot");
             }
             catch (Exception)
