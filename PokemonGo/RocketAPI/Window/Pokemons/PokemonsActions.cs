@@ -30,7 +30,7 @@ namespace PokemonGo.RocketAPI.Window
             {
                 ConsoleWriter.Evolved(pokemon, res);
                 MainForm.totalExperience += (res.ExpAwarded);
-                return CatchsEvolveTransfersSettings.toEvolve.Contains(res.EvolvedPokemon.PokemonType);
+                return CatchesEvolveTransfersSettings.toEvolve.Contains(res.EvolvedPokemon.PokemonType);
             }
             return false;
         }
@@ -73,13 +73,13 @@ namespace PokemonGo.RocketAPI.Window
 
         public static List<PokemonData> GetPokemonsToEvolve(List<PokemonData> pokemons)
         {
-            return pokemons.Where(p => CatchsEvolveTransfersSettings.toEvolve.Contains(p.PokemonId)).OrderByDescending(p => Perfect(p)).ToList();
+            return pokemons.Where(p => CatchesEvolveTransfersSettings.toEvolve.Contains(p.PokemonId)).OrderByDescending(p => Perfect(p)).ToList();
         }
 
         public static List<PokemonData> GetAllButStrongestPokemon(List<PokemonData> pokemons)
         {
             List<PokemonData> result = new List<PokemonData>();
-            foreach (var unwantedPokemonType in CatchsEvolveTransfersSettings.toTransfert)
+            foreach (var unwantedPokemonType in CatchesEvolveTransfersSettings.toTransfert)
             {
                 var partOfRes = pokemons.Where(p => p.PokemonId == unwantedPokemonType)
                     .OrderByDescending(p => p.Cp).Skip(1).ToList();
@@ -91,7 +91,7 @@ namespace PokemonGo.RocketAPI.Window
         public static List<PokemonData> GetAllButHighestIVPokemon(List<PokemonData> pokemons)
         {
             List<PokemonData> result = new List<PokemonData>();
-            foreach (var unwantedPokemonType in CatchsEvolveTransfersSettings.toTransfert)
+            foreach (var unwantedPokemonType in CatchesEvolveTransfersSettings.toTransfert)
             {
                 var partOfRes = pokemons.Where(p => p.PokemonId == unwantedPokemonType)
                     .OrderByDescending(p => Perfect(p)).Skip(1).ToList();
@@ -201,7 +201,7 @@ namespace PokemonGo.RocketAPI.Window
         public static async Task ExecuteCatchAllNearbyPokemons(GetMapObjectsResponse mapObjects)
         {
             var pokemons = mapObjects.MapCells.SelectMany(i => i.CatchablePokemons).
-                Where(i => !CatchsEvolveTransfersSettings.toNotCatch.Contains(i.PokemonId)).ToList();
+                Where(i => !CatchesEvolveTransfersSettings.toNotCatch.Contains(i.PokemonId)).ToList();
             farmingPokemons = true;
             foreach (var pokemon in pokemons)
             {

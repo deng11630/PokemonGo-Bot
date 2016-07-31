@@ -177,6 +177,30 @@ namespace PokemonGo.RocketAPI.Window
             allPkm.WriteXml(sw);
             ReadSettings.poke = sw.ToString();
             Settings.Instance.SetSetting(sw.ToString(), "Poke");
+
+            CatchesEvolveTransfersSettings.toEvolve.Clear();
+            CatchesEvolveTransfersSettings.toTransfert.Clear();
+            CatchesEvolveTransfersSettings.toNotCatch.Clear();
+
+            foreach(DataRow pkm in allPkm.Rows)
+            {
+                if((bool)pkm[2])
+                {
+                    CatchesEvolveTransfersSettings.toEvolve.Add((PokemonId)((int)pkm[0]));
+                }
+
+                if ((bool)pkm[3])
+                {
+                    CatchesEvolveTransfersSettings.toTransfert.Add((PokemonId)((int)pkm[0]));
+                }
+
+                if (!(bool)pkm[4])
+                {
+                    CatchesEvolveTransfersSettings.toNotCatch.Add((PokemonId)((int)pkm[0]));
+                }
+            }
+
+
             Close();
         }
     }

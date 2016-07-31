@@ -220,6 +220,80 @@ namespace PokemonGo.RocketAPI.Window
             ReadSettings.Load(Settings.Instance);
             ClientSettings = Settings.Instance;
             InitializeComponent();
+            LoadPoke();
+        }
+
+        private void LoadPoke()
+        {
+            DataTable allPkm = new DataTable();
+
+            var colId = new DataColumn();
+            colId.DataType = typeof(int);
+            colId.ColumnName = "Id";
+            allPkm.Columns.Add(colId);
+
+            var colPkm = new DataColumn();
+            colPkm.DataType = typeof(string);
+            colPkm.ColumnName = "Pokémon";
+            allPkm.Columns.Add(colPkm);
+
+            var colEvolve = new DataColumn();
+            colEvolve.DataType = typeof(bool);
+            colEvolve.ColumnName = "Evolve";
+            allPkm.Columns.Add(colEvolve);
+
+            var colTransfer = new DataColumn();
+            colTransfer.DataType = typeof(bool);
+            colTransfer.ColumnName = "Transfer";
+            allPkm.Columns.Add(colTransfer);
+
+            var colCatch = new DataColumn();
+            colCatch.DataType = typeof(bool);
+            colCatch.ColumnName = "Catch";
+            allPkm.Columns.Add(colCatch);
+
+
+            var colImg = new DataColumn();
+            colImg.DataType = typeof(Image);
+            colImg.ColumnName = " ";
+            allPkm.Columns.Add(colImg);
+
+            if (ReadSettings.poke != "")
+            {
+                StringReader sr = new StringReader(ReadSettings.poke);
+                allPkm.TableName = "Poke";
+                allPkm.ReadXml(sr);
+            }
+
+
+            allPkm.Columns["Id"].SetOrdinal(0);
+            allPkm.Columns[" "].SetOrdinal(1);
+            allPkm.Columns["Pokémon"].SetOrdinal(2);
+            allPkm.Columns["Evolve"].SetOrdinal(3);
+            allPkm.Columns["Transfer"].SetOrdinal(4);
+            allPkm.Columns["Catch"].SetOrdinal(5);
+
+            CatchesEvolveTransfersSettings.toEvolve.Clear();
+            CatchesEvolveTransfersSettings.toTransfert.Clear();
+            CatchesEvolveTransfersSettings.toNotCatch.Clear();
+
+            foreach (DataRow pkm in allPkm.Rows)
+            {
+                if ((bool)pkm[3])
+                {
+                    CatchesEvolveTransfersSettings.toEvolve.Add((PokemonId)((int)pkm[0]));
+                }
+
+                if ((bool)pkm[4])
+                {
+                    CatchesEvolveTransfersSettings.toTransfert.Add((PokemonId)((int)pkm[0]));
+                }
+
+                if (!(bool)pkm[5])
+                {
+                    CatchesEvolveTransfersSettings.toNotCatch.Add((PokemonId)((int)pkm[0]));
+                }
+            }
         }
 
         public static double GetRuntime()
@@ -402,7 +476,7 @@ namespace PokemonGo.RocketAPI.Window
         // Pulled from NecronomiconCoding
         public static string _getSessionRuntimeInTimeFormat()
         {
-            return (DateTime.Now - InitSessionDateTime).ToString(@"dd\.hh\:mm\:ss");
+            return (DateTime.Now - InitSessionDateTime).ToString(@"hh\:mm\:ss");
         }
 
 

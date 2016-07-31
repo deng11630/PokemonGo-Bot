@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace PokemonGo.RocketAPI.Window
 {
-    public static class CatchsEvolveTransfersSettings
+    public static class CatchesEvolveTransfersSettings
     {
         #region Transfert And Evolve Setting
-        public static PokemonId[] toTransfert = new[]
+        public static List<PokemonId> toTransfert = new List<PokemonId>
         {
         PokemonId.Bulbasaur,
         PokemonId.Ivysaur,
@@ -146,7 +146,7 @@ namespace PokemonGo.RocketAPI.Window
         PokemonId.Eevee,
         PokemonId.Dratini
         };
-        public static PokemonId[] toEvolve = new[]
+        public static List<PokemonId> toEvolve = new List<PokemonId>
         {
          PokemonId.Caterpie,
         PokemonId.Weedle,
@@ -199,7 +199,8 @@ namespace PokemonGo.RocketAPI.Window
         PokemonId.Omanyte,
         PokemonId.Kabuto,
        };
-        public static PokemonId[] toNotCatch = new[]{
+        public static List<PokemonId> toNotCatch = new List<PokemonId>
+        {
             PokemonId.Missingno
         };
         #endregion

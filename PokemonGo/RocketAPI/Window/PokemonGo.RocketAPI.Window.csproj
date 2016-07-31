@@ -90,7 +90,7 @@
       <DependentUpon>PokemonList.cs</DependentUpon>
     </Compile>
     <Compile Include="Pokemons\PokemonsActions.cs" />
-    <Compile Include="Settings\CatchsEvolveTransfersSettings.cs" />
+    <Compile Include="Settings\CatchesEvolveTransfersSettings.cs" />
     <Compile Include="LocationManager.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
