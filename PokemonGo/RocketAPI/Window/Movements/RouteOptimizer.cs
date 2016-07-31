@@ -46,7 +46,7 @@ namespace PokemonGo.RocketAPI.Window
         {
             MainForm.synchronizationContext.Post(new SendOrPostCallback(o =>
             {
-                List<FortData> p = new List<FortData>((FortData[])o);
+                var p = ((FortData[])o);
                 routeOverlay.Markers.Clear();
                 List<PointLatLng> routePoint = new List<PointLatLng>();
                 foreach (var pokeStop in p)

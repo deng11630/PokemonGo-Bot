@@ -181,6 +181,7 @@ namespace PokemonGo.RocketAPI.Window
 
         private async void Execute()
         {
+            PokemonActions.OntransfertEvolve = false;
             unbanning = false;
             stop = false;
             client = new Client(ClientSettings);
@@ -272,28 +273,6 @@ namespace PokemonGo.RocketAPI.Window
             allPkm.Columns["Evolve"].SetOrdinal(3);
             allPkm.Columns["Transfer"].SetOrdinal(4);
             allPkm.Columns["Catch"].SetOrdinal(5);
-
-            CatchesEvolveTransfersSettings.toEvolve.Clear();
-            CatchesEvolveTransfersSettings.toTransfert.Clear();
-            CatchesEvolveTransfersSettings.toNotCatch.Clear();
-
-            foreach (DataRow pkm in allPkm.Rows)
-            {
-                if ((bool)pkm[3])
-                {
-                    CatchesEvolveTransfersSettings.toEvolve.Add((PokemonId)((int)pkm[0]));
-                }
-
-                if ((bool)pkm[4])
-                {
-                    CatchesEvolveTransfersSettings.toTransfert.Add((PokemonId)((int)pkm[0]));
-                }
-
-                if (!(bool)pkm[5])
-                {
-                    CatchesEvolveTransfersSettings.toNotCatch.Add((PokemonId)((int)pkm[0]));
-                }
-            }
         }
 
         public static double GetRuntime()

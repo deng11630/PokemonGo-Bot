@@ -101,30 +101,28 @@ namespace PokemonGo.RocketAPI.Window
                     break;
             }
 
-            for (int i = 1; i <= 150; i++)
+            foreach(PokemonId id in Enum.GetValues(typeof(PokemonId)))
             {
-                
-
+                if (id == 0) continue;
                 if (ReadSettings.poke == "")
                 {
                     DataRow dtRow = allPkm.NewRow();
 
-                    dtRow[1] = ScaleImage(GetPokemonImage(i), ReadSettings.imageSize, ReadSettings.imageSize);
+                    dtRow[1] = ScaleImage(GetPokemonImage((int)id), ReadSettings.imageSize, ReadSettings.imageSize);
 
-                    dtRow[0] = i;
-                    dtRow[2] = pokeName.ElementAt(i);
-                    dtRow[3] = false;
-                    dtRow[4] = false;
-                    dtRow[5] = true;
+                    dtRow[0] = (int)id;
+                    dtRow[2] = pokeName.ElementAt((int)id);
+                    dtRow[3] = CatchesEvolveTransfersSettings.toEvolve.Contains(id);
+                    dtRow[4] = CatchesEvolveTransfersSettings.toTransfert.Contains(id);
+                    dtRow[5] = !CatchesEvolveTransfersSettings.toNotCatch.Contains(id);
                     allPkm.Rows.Add(dtRow);
                 }
                 else
                 {
-                    allPkm.Rows[i - 1][1] = ScaleImage(GetPokemonImage(i), ReadSettings.imageSize, ReadSettings.imageSize);
-                }
-
-                
+                    allPkm.Rows[(int)id - 1][1] = ScaleImage(GetPokemonImage((int)id), ReadSettings.imageSize, ReadSettings.imageSize);
+                }            
             }
+           // SaveOnVariables();
 
             pkmList.Columns[0].Visible = false;
             pkmList.Columns[1].Width = ReadSettings.imageSize;
@@ -176,14 +174,19 @@ namespace PokemonGo.RocketAPI.Window
             allPkm.WriteXml(sw);
             ReadSettings.poke = sw.ToString();
             Settings.Instance.SetSetting(sw.ToString(), "Poke");
+            sw.Dispose();
+            SaveOnVariables();
+            Close();
+        }
 
+        private void SaveOnVariables()
+        {
             CatchesEvolveTransfersSettings.toEvolve.Clear();
             CatchesEvolveTransfersSettings.toTransfert.Clear();
             CatchesEvolveTransfersSettings.toNotCatch.Clear();
-
-            foreach(DataRow pkm in allPkm.Rows)
+            foreach (DataRow pkm in allPkm.Rows)
             {
-                if((bool)pkm[2])
+                if ((bool)pkm[2])
                 {
                     CatchesEvolveTransfersSettings.toEvolve.Add((PokemonId)((int)pkm[0]));
                 }
@@ -198,9 +201,8 @@ namespace PokemonGo.RocketAPI.Window
                     CatchesEvolveTransfersSettings.toNotCatch.Add((PokemonId)((int)pkm[0]));
                 }
             }
-
-
-            Close();
         }
+
+
     }
 }
