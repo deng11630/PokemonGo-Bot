@@ -84,7 +84,7 @@
     <Compile Include="Movements\Movements.cs" />
     <Compile Include="Movements\RouteOptimizer.cs" />
     <Compile Include="Pokemons\PokemonsActions.cs" />
-    <Compile Include="Settings\EvolveAndTransfertSetting.cs" />
+    <Compile Include="Settings\CatchsEvolveTransfersSettings.cs" />
     <Compile Include="LocationManager.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

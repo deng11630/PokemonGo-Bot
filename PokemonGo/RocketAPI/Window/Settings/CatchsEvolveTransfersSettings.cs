@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PokemonGo.RocketAPI.Window
 {
-    public static class TransfertAndEvolveSetting
+    public static class CatchsEvolveTransfersSettings
     {
         #region Transfert And Evolve Setting
         public static PokemonId[] toTransfert = new[]
@@ -199,6 +199,9 @@ namespace PokemonGo.RocketAPI.Window
         PokemonId.Omanyte,
         PokemonId.Kabuto,
        };
+        public static PokemonId[] toNotCatch = new[]{
+            PokemonId.Missingno
+        };
         #endregion
 
     }
