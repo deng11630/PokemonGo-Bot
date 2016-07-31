@@ -114,8 +114,8 @@ namespace PokemonGo.RocketAPI.Window
                     dtRow[0] = i;
                     dtRow[2] = pokeName.ElementAt(i);
                     /// TODO : Get Values
-                    dtRow[3] = true;
-                    dtRow[4] = true;
+                    dtRow[3] = false;
+                    dtRow[4] = false;
                     dtRow[5] = true;
                     allPkm.Rows.Add(dtRow);
                 }
