@@ -175,15 +175,15 @@ namespace PokemonGo.RocketAPI.Window
 
         public static async Task InventoryActions(int delay, int nb)
         {
-            var inventory = await client.GetInventory();
+            Inventory.UpdateInventory(client);
             if (nb++ > 30)
             {
-                await client.RecycleInventory(inventory);
+                await client.RecycleItems(Inventory.items);
                 nb = 0;
             }
-            ConsoleWriter.ConsoleLevelTitle(profile.Profile.Username, client, inventory);
-            ConsoleWriter.PrintLevel(client, inventory);
-            PokemonActions.EvolveAndTransfert(client, inventory);
+            ConsoleWriter.ConsoleLevelTitle(profile.Profile.Username, client, Inventory.inventory);
+            ConsoleWriter.PrintLevel(client, Inventory.inventory);
+            PokemonActions.EvolveAndTransfert(client, Inventory.inventory);
             await Task.Delay(delay);
             InventoryActions(delay, nb);
         }
@@ -358,8 +358,8 @@ namespace PokemonGo.RocketAPI.Window
             {
                 try
                 {
-                    IEnumerable<Item> myItems = await client.GetItems(client);
-                    IEnumerable<Item> LuckyEggs = myItems.Where(i => (ItemId)i.Item_ == ItemId.ItemLuckyEgg);
+              
+                    IEnumerable<Item> LuckyEggs = Inventory.items.Where(i => (ItemId)i.Item_ == ItemId.ItemLuckyEgg);
                     Item LuckyEgg = LuckyEggs.FirstOrDefault();
                     if (LuckyEgg != null)
                     {

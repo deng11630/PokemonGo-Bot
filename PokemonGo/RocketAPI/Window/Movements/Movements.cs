@@ -63,20 +63,29 @@ namespace PokemonGo.RocketAPI.Window
             var mapObjects = await client.GetMapObjects();
             var pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint && PokestopDefaultPosDist(i) < ReadSettings.deplacementsMaxDist).ToList();
             ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Save every pokestops in radius of " + ReadSettings.deplacementsMaxDist * 1000 + " meters !!");
-            ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"{pokeStops.Count} PokeStops");
+            if (!ConsoleWriter.PokestopFarmStart(pokeStops))
+                return;
+            double traveledDistance = 0;
             do
             {
 
                 var pokeStop = GetNearestPokestop(pokeStops);
+                traveledDistance = distanceFrom(pokeStop.Latitude, pokeStop.Longitude, client.getCurrentLat(), client.getCurrentLong());
+                if (pokeStop == null)
+                    return;
                 if (pokeStop == null)
                     return;
                 await locationManager.update(pokeStop.Latitude, pokeStop.Longitude);
                 var fortInfo = await client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-                int wait = 300;
+                int wait = ReadSettings.waitForUnlock;
+                if (!ReadSettings.instantMoove)
+                {
+                    wait = (int)(ReadSettings.timePerKmMs * traveledDistance); //speed * millisecondes
+                    ConsoleWriter.StartPokestop(traveledDistance);
+                }
                 do
                 {
                     await Task.Delay(wait);
-                    wait += wait;
                     fortSearch = await client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                     ConsoleWriter.PrintPokestopTakeInfos(fortInfo, fortSearch);
                 }
@@ -113,6 +122,8 @@ namespace PokemonGo.RocketAPI.Window
             ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Stay here and farm please !!");
             ConsoleWriter.ColoredConsoleWrite(Color.Cyan, pokeStops.Count +  " Pokestops");
             double traveledDistance = 0;
+            if (!ConsoleWriter.PokestopFarmStart(pokeStops))
+                return;
             do
             {
                 var pokeStop = GetNearestPokestop(pokeStops);
@@ -151,9 +162,10 @@ namespace PokemonGo.RocketAPI.Window
             FortSearchResponse fortSearch;
             var mapObjects = await client.GetMapObjects();
             var pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint).ToList();
-            ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel the world and save every pokestops !!");
-            ConsoleWriter.ColoredConsoleWrite(Color.Cyan, pokeStops.Count + " Pokestops");
+            ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel the world and save every pokestops !!");         
             double traveledDistance = 0;
+            if (!ConsoleWriter.PokestopFarmStart(pokeStops))
+                return;
             do
             {
                 var pokeStop = GetNearestPokestop(pokeStops);
@@ -198,9 +210,10 @@ namespace PokemonGo.RocketAPI.Window
             FortSearchResponse fortSearch;
             var mapObjects = await client.GetMapObjects();
             var pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint).ToList();
-            ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel the world and discover a new pokestops !!");
-            ConsoleWriter.ColoredConsoleWrite(Color.Cyan, pokeStops.Count + " Pokestops");
+            ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel the world and discover a new pokestops !!");  
             double traveledDistance = 0;
+            if (!ConsoleWriter.PokestopFarmStart(pokeStops))
+                return;
             do
             {
                 var pokeStop = GetNearestPokestop(pokeStops);

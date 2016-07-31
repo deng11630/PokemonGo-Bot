@@ -171,6 +171,26 @@ namespace PokemonGo.RocketAPI.Window
         }
 
 
+        public static bool PokestopFarmStart(List<FortData> pokestops)
+        {
+            if (pokestops.Count < 1)
+            {
+                ConsoleWriter.ColoredConsoleWrite(Color.Red, $"ERROR ->  Cannot farm without at least 1 pokestop near you.");
+                return false;
+            }
+            else if (pokestops.Count < 30)
+                ConsoleWriter.ColoredConsoleWrite(Color.Red, $"Not a great place for farm, only {pokestops.Count} pokestops near you");
+            else if (pokestops.Count < 100)
+                ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"{pokestops.Count} pokestops near you");
+            else if (pokestops.Count < 150)
+                ConsoleWriter.ColoredConsoleWrite(Color.Yellow, $"Great place, {pokestops.Count} pokestops near you");
+            else
+            {
+                ConsoleWriter.ColoredConsoleWrite(Color.Pink, $"Wouw ! Excelente place, {pokestops.Count} pokestops near you");
+                ConsoleWriter.ColoredConsoleWrite(Color.Red, $"Please share your position with the communauty https://github.com/mfron/Pokemon-Go-Bot/issues");
+            }
+            return true;  
+        }
 
         public static async Task ConsoleLevelTitle(string Username, Client client, GetInventoryResponse inventory)
         {

@@ -49,7 +49,9 @@ namespace PokemonGo.RocketAPI.Window
                 }
                 await client.SetServer();
                 var profile = await client.GetProfile();
-                var inventory = await client.GetInventory();
+
+                await Inventory.UpdateInventory(client);
+                var inventory = Inventory.inventory;
                 var pokemons =
                     inventory.InventoryDelta.InventoryItems
                     .Select(i => i.InventoryItemData?.Pokemon)

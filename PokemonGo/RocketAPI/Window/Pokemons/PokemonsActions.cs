@@ -14,12 +14,12 @@ namespace PokemonGo.RocketAPI.Window
 {
     public static class PokemonActions
     {
-        public static int nbPokemons = 0;
         public static int nbCatchs = 0;
         public static bool farmingPokemons = false;
         public static  Client client;
-        public static bool OntransfertEvolve = false;      
-
+        public static bool OntransfertEvolve = false; 
+          
+  
 
 
         public static async Task<bool> EvolvePokemon(PokemonData pokemon)
@@ -33,6 +33,7 @@ namespace PokemonGo.RocketAPI.Window
             }
             return false;
         }
+
 
 
 
@@ -61,16 +62,12 @@ namespace PokemonGo.RocketAPI.Window
             return ((float)(poke.IndividualAttack + poke.IndividualDefense + poke.IndividualStamina) / (3.0f * 15.0f)) * 100.0f;
         }
 
-        public static List<PokemonData> GetPokemons(GetInventoryResponse inventory)
-        {
-            var pokemons = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon).Where(p => p != null && p?.PokemonId > 0).ToList();
-            nbPokemons = pokemons.Count;
-            return pokemons;
-        }
+
 
         public static async Task<List<PokemonData>> UpdatePokemons()
         {
-            return GetPokemons(await client.GetInventory());
+            await Inventory.UpdateInventory(client);
+            return Inventory.pokemons;                
         }
 
         public static List<PokemonData> GetPokemonsToEvolve(List<PokemonData> pokemons)
@@ -119,7 +116,7 @@ namespace PokemonGo.RocketAPI.Window
                 var transferPokemonResponse = await client.TransferPokemon(pokemon.Id);
                 ConsoleWriter.TransferedPokemon(pokemon, transferPokemonResponse);
                 if (transferPokemonResponse.Status == 1)
-                    nbPokemons--;
+                    Inventory.nbPokemons--;
                 await Task.Delay(ReadSettings.transfertWait);
             }
         }
@@ -134,10 +131,10 @@ namespace PokemonGo.RocketAPI.Window
 
         public static async Task EvolveAndTransfert(Client client, GetInventoryResponse inventory)
         {
-            var pokemons = GetPokemons(inventory);
+            var pokemons = await UpdatePokemons();
             if (OntransfertEvolve)
                 return;
-            if (nbPokemons > ReadSettings.maxPokemonsOnInventory)
+            if (Inventory.nbPokemons > ReadSettings.maxPokemonsOnInventory)
             {
                 OntransfertEvolve = true;
                 if (ReadSettings.evolveAllGivenPokemons)
@@ -175,13 +172,23 @@ namespace PokemonGo.RocketAPI.Window
 
         private static async Task<CatchPokemonResponse> CatchPokemon(EncounterResponse encounterPokemonResponse, MapPokemon pokemon, int? pokemonCP)
         {
-            if (ReadSettings.razzBerryMode == "cp")
-                if (pokemonCP > ReadSettings.razzBerrySetting)
-                    await client.UseRazzBerry(client, pokemon.EncounterId, pokemon.SpawnpointId);
-            if (ReadSettings.razzBerryMode == "probability")
-                if (encounterPokemonResponse.CaptureProbability.CaptureProbability_.First() < ReadSettings.razzBerrySetting)
-                    await client.UseRazzBerry(client, pokemon.EncounterId, pokemon.SpawnpointId);
-            return await client.CatchPokemon(pokemon.EncounterId, pokemon.SpawnpointId, pokemon.Latitude, pokemon.Longitude, MiscEnums.Item.ITEM_POKE_BALL, pokemonCP); ; //note: reverted from settings because this should not be part of settings but part of logic
+            if (Inventory.razzBerry > 0)
+            {
+
+                if (ReadSettings.razzBerryMode == "cp")
+                    if (pokemonCP > ReadSettings.razzBerrySetting)
+                    {
+                        await client.UseRazzBerry(client, pokemon.EncounterId, pokemon.SpawnpointId);
+                        Inventory.razzBerry--;
+                    }
+                else if (ReadSettings.razzBerryMode == "probability")
+                    if (encounterPokemonResponse.CaptureProbability.CaptureProbability_.First() < ReadSettings.razzBerrySetting)
+                    {
+                        await client.UseRazzBerry(client, pokemon.EncounterId, pokemon.SpawnpointId);
+                        Inventory.razzBerry--;
+                    }
+            }
+            return await client.CatchPokemon(pokemon.EncounterId, pokemon.SpawnpointId, (int)Inventory.GetPokeballToUse(pokemonCP)); ; //note: reverted from settings because this should not be part of settings but part of logic
 
         }
 
@@ -215,10 +222,9 @@ namespace PokemonGo.RocketAPI.Window
                 {
                     foreach (int xp in caughtRes.Scores.Xp)
                         MainForm.totalExperience += xp;
-                    nbPokemons++;
+                    Inventory.nbPokemons++;
                     nbCatchs++;
                 }
-                
                 ConsoleWriter.CaughtPokemon(caughtRes, pokemon, pokemonCP, (int)pokemonIV);
             }
             farmingPokemons = false;

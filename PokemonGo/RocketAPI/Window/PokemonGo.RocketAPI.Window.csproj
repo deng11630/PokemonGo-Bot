@@ -70,6 +70,7 @@
     <Compile Include="CueTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Inventory\Inventory.cs" />
     <Compile Include="Movements\Movements.cs" />
     <Compile Include="Pokemons\PokemonsActions.cs" />
     <Compile Include="Settings\EvolveAndTransfertSetting.cs" />
