@@ -43,10 +43,8 @@ namespace PokemonGo.RocketAPI.Window
                 }
 
                 await client.SetServer();
-                var inventory = await client.GetInventory();
-                var pokemons =
-                    inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon)
-                        .Where(p => p != null && p?.PokemonId > 0).OrderByDescending(key => key.Cp);
+                await Inventory.UpdateInventory(client);    
+                var pokemons = Inventory.pokemons.OrderByDescending(key => key.Cp).ToList();
                 
 
                 foreach (var pokemon in pokemons)

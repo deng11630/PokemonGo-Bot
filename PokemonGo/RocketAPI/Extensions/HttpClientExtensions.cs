@@ -28,14 +28,15 @@ namespace PokemonGo.RocketAPI.Extensions
             return decodedResponse;
         }
 
+
         private static bool waitingForResponse = false;
         public static async Task<TResponsePayload> PostProtoPayload<TRequest, TResponsePayload>(this HttpClient client,
             string url, TRequest request) where TRequest : IMessage<TRequest>
             where TResponsePayload : IMessage<TResponsePayload>, new()
         {
             ByteString payload = null;
-            //while (waitingForResponse)
-            //    await Task.Delay(30);
+            while (waitingForResponse)
+                await Task.Delay(30);
             waitingForResponse = true;
             Response response = null;
             int count = 0;
