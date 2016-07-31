@@ -83,6 +83,12 @@
     <Compile Include="Maps\S2GMapDrawer.cs" />
     <Compile Include="Movements\Movements.cs" />
     <Compile Include="Movements\RouteOptimizer.cs" />
+    <Compile Include="PokemonList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PokemonList.Designer.cs">
+      <DependentUpon>PokemonList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pokemons\PokemonsActions.cs" />
     <Compile Include="Settings\EvolveAndTransfertSetting.cs" />
     <Compile Include="LocationManager.cs" />
@@ -97,12 +103,6 @@
     </Compile>
     <Compile Include="MapForm.Designer.cs">
       <DependentUpon>MapForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PokemonForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PokemonForm.Designer.cs">
-      <DependentUpon>PokemonForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PokeUi.cs">
       <SubType>Form</SubType>
@@ -127,8 +127,8 @@
     <EmbeddedResource Include="MapForm.resx">
       <DependentUpon>MapForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PokemonForm.resx">
-      <DependentUpon>PokemonForm.cs</DependentUpon>
+    <EmbeddedResource Include="PokemonList.resx">
+      <DependentUpon>PokemonList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PokeUi.resx">
       <DependentUpon>PokeUi.cs</DependentUpon>
