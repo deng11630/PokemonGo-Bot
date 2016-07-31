@@ -73,7 +73,7 @@ namespace PokemonGo.RocketAPI.Window
                 pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint && PokestopDefaultPosDist(i) < ReadSettings.deplacementsMaxDist).ToList();
             if (!ConsoleWriter.PokestopFarmStart(pokeStops))
                 return;
-            pokeStops = RouteOptimizer.Optimize(pokeStops.ToArray(), client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
+            pokeStops = RouteOptimizer.Optimize(pokeStops, client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
             PokemonActions.wildPokemons = mapObjects.MapCells.SelectMany(i => i.WildPokemons).ToList();
             ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel mode : Farm all in range of " + ReadSettings.deplacementsMaxDist.ToString("N3") + "Km");
             double traveledDistance = 0;
@@ -130,7 +130,7 @@ namespace PokemonGo.RocketAPI.Window
                 pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint).ToList();
             if (!ConsoleWriter.PokestopFarmStart(pokeStops))
                 return;
-            pokeStops = RouteOptimizer.Optimize(pokeStops.ToArray(), client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
+            pokeStops = RouteOptimizer.Optimize(pokeStops, client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
             PokemonActions.wildPokemons = mapObjects.MapCells.SelectMany(i => i.WildPokemons).ToList();
             ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel mode : Travel the world step by step");
             double traveledDistance = 0;             
@@ -181,7 +181,7 @@ namespace PokemonGo.RocketAPI.Window
                 pokeStops = mapObjects.MapCells.SelectMany(i => i.Forts).Where(i => i.Type == FortType.Checkpoint).ToList();
             if (!ConsoleWriter.PokestopFarmStart(pokeStops))
                 return;
-            pokeStops = RouteOptimizer.Optimize(pokeStops.ToArray(), client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
+            pokeStops = RouteOptimizer.Optimize(pokeStops, client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
             PokemonActions.wildPokemons = mapObjects.MapCells.SelectMany(i => i.WildPokemons).ToList();
             ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel mode : Travel the world and save every pokestops !!");
             double traveledDistance = 0;
