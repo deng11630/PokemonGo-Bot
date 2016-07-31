@@ -91,7 +91,7 @@
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // startBotToolStripMenuItem
+            // startStopBotToolStripMenuItem
             // 
             this.startStopBotToolStripMenuItem.Name = "startStopBotToolStripMenuItem";
             this.startStopBotToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
@@ -155,8 +155,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "PokemonGo Rocket API";
-            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Text = "PokemonGo Rocket API";                      
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -167,8 +166,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.RichTextBox logTextBox;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem todoToolStripMenuItem;
@@ -180,5 +177,6 @@
         private System.Windows.Forms.ToolStripMenuItem useLuckyEggToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem forceUnbanToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mapToolStripMenuItem;
+        public System.Windows.Forms.RichTextBox logTextBox;
     }
 }

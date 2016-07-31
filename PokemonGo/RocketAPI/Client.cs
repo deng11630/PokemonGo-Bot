@@ -13,13 +13,6 @@ using PokemonGo.RocketAPI.Helpers;
 using PokemonGo.RocketAPI.Login;
 using AllEnum;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Threading;
-using PokemonGo.RocketAPI.Exceptions;
-using System.Text;
-using System.IO;
 using DankMemes.GPSOAuthSharp;
 
 #endregion
@@ -140,25 +133,20 @@ namespace PokemonGo.RocketAPI
         }
 
 
-        private bool isEvolve = false;
+
 
         public async Task<EvolvePokemonOut> EvolvePokemon(ulong pokemonId)
         {
-            while (isEvolve)
-                await Task.Delay(30);
-            isEvolve = true;
             var customRequest = new EvolvePokemon
             {
                 PokemonId = pokemonId
             };
-
             var releasePokemonRequest = RequestBuilder.GetRequest(_unknownAuth, _currentLat, _currentLng, 30,
                 new Request.Types.Requests
                 {
                     Type = (int)RequestType.EVOLVE_POKEMON,
                     Message = customRequest.ToByteString()
-                });
-            isEvolve = false;
+                });     
             return
                 await
                     _httpClient.PostProtoPayload<Request, EvolvePokemonOut>($"https://{_apiUrl}/rpc",
@@ -330,6 +318,9 @@ namespace PokemonGo.RocketAPI
             return
                 await _httpClient.PostProtoPayload<Request, GetMapObjectsResponse>($"https://{_apiUrl}/rpc", mapRequest);
         }
+
+
+
 
         public async Task<GetPlayerResponse> GetProfile()
         {
@@ -542,6 +533,24 @@ namespace PokemonGo.RocketAPI
             //    ColoredConsoleWrite(ConsoleColor.Green, $"Using a Razz Berry, we have {RazzBerry.Count} left");
             //    //await Task.Delay(2000);
             //}
+        }
+
+        public async Task RecycleInventory(GetInventoryResponse inventory)
+        {
+
+            var items = inventory.InventoryDelta.InventoryItems
+                .Select(i => i.InventoryItemData?.Item)
+                .Where(p => p != null);                    
+            var toRecycle =
+                items.Where(x => _settings.ItemRecycleFilter.Any(f => f.Key == ((ItemId)x.Item_) && x.Count > f.Value))
+                .Select(x => new Item { Item_ = x.Item_, Count = x.Count - _settings.ItemRecycleFilter.Single(f => f.Key == (AllEnum.ItemId)x.Item_).Value, Unseen = x.Unseen });
+
+                foreach (var item in toRecycle)
+                {
+                    var transfer = await RecycleItem((AllEnum.ItemId)item.Item_, item.Count);
+                    ColoredConsoleWrite(ConsoleColor.DarkCyan, $"Recycled {item.Count}x {((AllEnum.ItemId)item.Item_).ToString().Substring(4)}");
+                }
+
         }
 
         public async Task<UseItemRequest> UseItemXpBoost(ItemId itemId)

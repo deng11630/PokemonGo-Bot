@@ -36,7 +36,7 @@ namespace PokemonGo.RocketAPI.Window
 
             return (float)Math.Sqrt(Math.Pow(lat - lng, 2) + Math.Pow(client.getCurrentLat() - client.getCurrentLong(), 2));
 
-         }
+        }
         public static double mpi180 = Math.PI / 180;
         public struct Coordinate
         {
@@ -56,7 +56,7 @@ namespace PokemonGo.RocketAPI.Window
             {
 
                 var lat2 = c2.latitude;
-                var lon2 = c2.longitude; 
+                var lon2 = c2.longitude;
 
                 var lat1 = this.latitude;
                 var lon1 = this.longitude;
