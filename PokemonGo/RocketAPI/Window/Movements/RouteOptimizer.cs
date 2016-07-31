@@ -14,7 +14,7 @@ namespace PokemonGo.RocketAPI.Window
     {
         public static double mPI180 = Math.PI / 180;
 
-        public static List<FortData> Optimize(FortData[] pokeStops, double lat, double lng, GMapOverlay routeOverlay)
+        public static List<FortData> Optimize(List<FortData> pokeStops, double lat, double lng, GMapOverlay routeOverlay)
         {
             List<FortData> optimizedRoute = new List<FortData>(pokeStops);
 
@@ -22,12 +22,12 @@ namespace PokemonGo.RocketAPI.Window
             FortData NN = FindNN(optimizedRoute, lat, lng);
             optimizedRoute.Remove(NN);
             optimizedRoute.Insert(0, NN);
-            for (int i = 1; i < pokeStops.Length; i++)
+            for (int i = 1; i < pokeStops.Count; i++)
             {
                 NN = FindNN(optimizedRoute.Skip(i), NN.Latitude, NN.Longitude);
                 optimizedRoute.Remove(NN);
                 optimizedRoute.Insert(i, NN);
-                Visualize(optimizedRoute, routeOverlay);
+                Visualize(optimizedRoute.ToArray(), routeOverlay);
             }
 
             // 2-Opt
@@ -35,18 +35,18 @@ namespace PokemonGo.RocketAPI.Window
             do
             {
                 optimizedRoute = Optimize2Opt(optimizedRoute, out isOptimized);
-                Visualize(optimizedRoute, routeOverlay);
+                Visualize(optimizedRoute.ToArray(), routeOverlay);
             }
             while (isOptimized);
 
             return optimizedRoute;
         }
 
-        private static void Visualize(List<FortData> pokeStops, GMapOverlay routeOverlay)
+        private static void Visualize(FortData[] pokeStops, GMapOverlay routeOverlay)
         {
             MainForm.synchronizationContext.Post(new SendOrPostCallback(o =>
             {
-                List<FortData> p = new List<FortData>((List<FortData>)o);
+                List<FortData> p = new List<FortData>((FortData[])o);
                 routeOverlay.Markers.Clear();
                 List<PointLatLng> routePoint = new List<PointLatLng>();
                 foreach (var pokeStop in p)
