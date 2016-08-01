@@ -208,7 +208,7 @@ namespace PokemonGo.RocketAPI.Window
                 ConsoleWriter.ColoredConsoleWrite(Color.Red, "System URI Format Exception - Restarting");   Restart(client);
             }
             catch (ArgumentOutOfRangeException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "ArgumentOutOfRangeException - Restarting"); await Restart(client); }
-            catch (ArgumentNullException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Argument Null Refference - Restarting");  Restart(client); }
+            catch (ArgumentNullException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Argument Null Refference - Restarting | Check if your credentials are correct");  Restart(client); }
             catch (NullReferenceException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Null Refference - Restarting");  Restart(client); }
             catch (Exception e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, e.ToString()); Restart(client); }
         }
