@@ -23,7 +23,7 @@ namespace PokemonGo.RocketAPI.Window
                 version = version.Substring(0, version.Length - 2);
                 ColoredConsoleWrite(Color.SpringGreen, "Fastest pokemon go bot.");
                 ColoredConsoleWrite(Color.Green, "Your version is " + version);
-                ColoredConsoleWrite(Color.Green, "You can find it at www.github.com/mfron/Pokemon-Go-Bot");
+                ColoredConsoleWrite(Color.Green, "You can find it at www.github.com/mfron/PokemonGo-Bot");
             }
             catch (Exception)
             {
@@ -85,7 +85,7 @@ namespace PokemonGo.RocketAPI.Window
             ColoredConsoleWrite(Color.Yellow, "----------------------------");
             ColoredConsoleWrite(Color.White, "----------------------------");
             ColoredConsoleWrite(Color.Fuchsia, "Best Donator : Zayceur With 2$");
-            ColoredConsoleWrite(Color.Fuchsia, "We take tim for your bot, you can donate someting in you to");
+            ColoredConsoleWrite(Color.Fuchsia, "We take time for your bot, you can donate someting you too");
             ColoredConsoleWrite(Color.Fuchsia, "You can donate here : https://www.paypal.me/mfron");
             ColoredConsoleWrite(Color.White, "----------------------------");
         }
