@@ -77,5 +77,3 @@ namespace PokemonGo.RocketAPI.Window
     }
 
 }
-
-}
