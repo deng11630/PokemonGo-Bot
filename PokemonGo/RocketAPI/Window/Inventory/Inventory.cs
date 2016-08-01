@@ -62,9 +62,9 @@ namespace PokemonGo.RocketAPI.Window
         {
             if (ReadSettings.pokeballMode == "CP")
             {
-                if (pokemonCP > ReadSettings.IVToUseHyperBall)
+                if (pokemonCP > ReadSettings.cpToUseHyperBall)
                     return MiscEnums.Item.ITEM_ULTRA_BALL;
-                if (pokemonCP > ReadSettings.IVToUseSuperBall)
+                if (pokemonCP > ReadSettings.cpToUseSuperBall)
                     return MiscEnums.Item.ITEM_GREAT_BALL;
                 return MiscEnums.Item.ITEM_POKE_BALL;
             }
