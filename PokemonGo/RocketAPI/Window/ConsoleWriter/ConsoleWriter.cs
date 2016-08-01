@@ -221,7 +221,7 @@ namespace PokemonGo.RocketAPI.Window
                         v.Level, _getSessionRuntimeInTimeFormat(),
                         (v.Experience - v.PrevLevelXp - XpDiff), (v.NextLevelXp - v.PrevLevelXp - XpDiff), profile.Profile.Currency.ToArray()[1].Amount) +
                         " | XP/Hour: " + Math.Round(MainForm.totalExperience / MainForm.GetRuntime()) + " | Pokemon/Hour: " + Math.Round(PokemonActions.nbCatchs / MainForm.GetRuntime()) +
-                        " | NextLevel in: " + ts.Hours + ":" + ts.Minutes + ":" + ts.Seconds + waitUnlock);
+                        " | Next level in: " + ts.Hours + ":" + ts.Minutes + ":" + ts.Seconds + waitUnlock);
 
                 }
         }
