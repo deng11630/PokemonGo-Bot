@@ -41,12 +41,14 @@ namespace PokemonGo.RocketAPI.Extensions
             //ColoredConsoleWrite(ConsoleColor.Red, "ArgumentOutOfRangeException - Restarting");
             //ColoredConsoleWrite(ConsoleColor.Red, ($"[DEBUG] [{DateTime.Now.ToString("HH:mm:ss")}] requesting {typeof(TResponsePayload).Name}"));
             response = await PostProto(client, url, request);
-            if (response.Payload.Count < 1 && count < 100)
+            if (response.Payload.Count < 1 && count < 50)
             {
                 count++;
                 await Task.Delay(30 * count);
                 goto START;
             }
+            if (response.Payload.Count < 1)
+                throw new Exception("No response on the request");
             payload = response.Payload[0];
             var parsedPayload = new TResponsePayload();
             parsedPayload.MergeFrom(payload);

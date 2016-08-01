@@ -352,7 +352,7 @@ namespace PokemonGo.RocketAPI.Window
             }
             ConsoleWriter.ConsoleLevelTitle(profile.Profile.Username, client, Inventory.inventory);
             ConsoleWriter.PrintLevel(client, Inventory.inventory);
-            PokemonActions.EvolveAndTransfert(client, Inventory.inventory);
+            PokemonActions.EvolveAndTransfert(client);
             await Task.Delay(delay);
             if (!stopInventoryActions)
                 InventoryActions(delay, nb);

@@ -35,10 +35,6 @@ namespace PokemonGo.RocketAPI.Window
             return false;
         }
 
-
-
-
-
         public static async Task EvolveAllGivenPokemons(Client client, IEnumerable<PokemonData> pokemonToEvolve, GetInventoryResponse inventory)
         {
             var families = inventory.InventoryDelta.InventoryItems
@@ -130,17 +126,17 @@ namespace PokemonGo.RocketAPI.Window
         }
 
 
-        public static async Task EvolveAndTransfert(Client client, GetInventoryResponse inventory)
+        public static async Task EvolveAndTransfert(Client client)
         {
-            var pokemons = await UpdatePokemons();
-            if (OntransfertEvolve)
+            if (OntransfertEvolve || Inventory.inventory == null)
                 return;
+            var pokemons = Inventory.pokemons;
             if (Inventory.nbPokemons > ReadSettings.maxPokemonsOnInventory)
             {
                 OntransfertEvolve = true;
                 if (ReadSettings.evolveAllGivenPokemons)
                 {
-                    await EvolveAllGivenPokemons(client, GetPokemonsToEvolve(pokemons), inventory);
+                    await EvolveAllGivenPokemons(client, GetPokemonsToEvolve(pokemons), Inventory.inventory);
                     pokemons = UpdatePokemons().Result;
                 }
                 switch (ReadSettings.transferType)
