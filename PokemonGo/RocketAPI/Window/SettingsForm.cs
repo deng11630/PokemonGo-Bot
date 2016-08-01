@@ -39,6 +39,19 @@ namespace PokemonGo.RocketAPI.Window
             CatchPokemonBox.Checked = Settings.Instance.CatchPokemon;
             TravelSpeedBox.Text = Settings.Instance.TravelSpeed.ToString();
             ImageSizeBox.Text = Settings.Instance.ImageSize.ToString();
+            comboBox1.Text = Settings.Instance.pokeballMode;
+            lblSuper.Text = comboBox1.Text + " for Superball:";
+            lblHyper.Text = comboBox1.Text + " for Hyperball:";
+            if(comboBox1.Text == "IV")
+            {
+                txtSuper.Text = Settings.Instance.IVToUseSuperBall.ToString();
+                txtHyper.Text = Settings.Instance.IVToUseHyperBall.ToString();
+            }
+            else
+            {
+                txtSuper.Text = Settings.Instance.cpToUseSuperBall.ToString();
+                txtHyper.Text = Settings.Instance.cpToUseHyperBall.ToString();
+            }
             // Initialize map:
             //use google provider
             gMapControl1.MapProvider = GoogleMapProvider.Instance;
@@ -92,6 +105,19 @@ namespace PokemonGo.RocketAPI.Window
             Settings.Instance.SetSetting(ImageSizeBox.Text, "ImageSize");
             Settings.Instance.SetSetting(evolveAllChk.Checked ? "true" : "false", "EvolveAllGivenPokemons");
             Settings.Instance.SetSetting(CatchPokemonBox.Checked ? "true" : "false", "CatchPokemon");
+            Settings.Instance.SetSetting(comboBox1.Text, "pokeballMode");
+
+            if(comboBox1.Text == "IV")
+            {
+                Settings.Instance.SetSetting(txtSuper.Text, "IVToUseSuperBall");
+                Settings.Instance.SetSetting(txtHyper.Text, "IVToUseHyperBall");
+            }
+            else
+            {
+                Settings.Instance.SetSetting(txtSuper.Text, "cpToUseSuperBall");
+                Settings.Instance.SetSetting(txtHyper.Text, "cpToUseHyperBall");
+            }
+
             Settings.Instance.Reload();
             Close();
         }
@@ -243,6 +269,22 @@ namespace PokemonGo.RocketAPI.Window
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            lblSuper.Text = comboBox1.Text + " for Superball:";
+            lblHyper.Text = comboBox1.Text + " for Hyperball:";
+            if (comboBox1.Text == "IV")
+            {
+                txtSuper.Text = ReadSettings.IVToUseSuperBall.ToString();
+                txtHyper.Text = ReadSettings.IVToUseHyperBall.ToString();
+            }
+            else
+            {
+                txtSuper.Text = ReadSettings.cpToUseSuperBall.ToString();
+                txtHyper.Text = ReadSettings.cpToUseHyperBall.ToString();
+            }
         }
     }
 }

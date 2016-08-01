@@ -55,18 +55,24 @@
             this.AdressBox = new System.Windows.Forms.TextBox();
             this.trackBar = new System.Windows.Forms.TrackBar();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.ImageSizeBox = new System.Windows.Forms.TextBox();
+            this.EmailLoginText = new System.Windows.Forms.Label();
             this.CatchPokemonBox = new System.Windows.Forms.CheckBox();
+            this.EmailPasswordText = new System.Windows.Forms.Label();
             this.CatchPokemonText = new System.Windows.Forms.Label();
+            this.EmailPasswordBox = new System.Windows.Forms.TextBox();
+            this.EmailLoginBox = new System.Windows.Forms.TextBox();
             this.transferIVThresText = new System.Windows.Forms.TextBox();
             this.TravelSpeedText = new System.Windows.Forms.Label();
             this.TravelSpeedBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.EmailLoginText = new System.Windows.Forms.Label();
-            this.EmailPasswordText = new System.Windows.Forms.Label();
-            this.EmailLoginBox = new System.Windows.Forms.TextBox();
-            this.EmailPasswordBox = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.ImageSizeBox = new System.Windows.Forms.TextBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.lblSuper = new System.Windows.Forms.Label();
+            this.txtSuper = new System.Windows.Forms.TextBox();
+            this.txtHyper = new System.Windows.Forms.TextBox();
+            this.lblHyper = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.panel1.SuspendLayout();
@@ -263,7 +269,7 @@
             // 
             this.saveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveBtn.Location = new System.Drawing.Point(0, 341);
+            this.saveBtn.Location = new System.Drawing.Point(0, 578);
             this.saveBtn.Name = "saveBtn";
             this.saveBtn.Size = new System.Drawing.Size(198, 95);
             this.saveBtn.TabIndex = 20;
@@ -273,6 +279,9 @@
             // 
             // gMapControl1
             // 
+            this.gMapControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gMapControl1.BackColor = System.Drawing.SystemColors.Info;
             this.gMapControl1.Bearing = 0F;
             this.gMapControl1.CanDragMap = true;
@@ -293,7 +302,7 @@
             this.gMapControl1.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
             this.gMapControl1.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gMapControl1.ShowTileGridLines = false;
-            this.gMapControl1.Size = new System.Drawing.Size(468, 388);
+            this.gMapControl1.Size = new System.Drawing.Size(827, 625);
             this.gMapControl1.TabIndex = 22;
             this.gMapControl1.Zoom = 0D;
             this.gMapControl1.Load += new System.EventHandler(this.gMapControl1_Load);
@@ -308,16 +317,15 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(221, 9);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(474, 442);
+            this.groupBox1.Size = new System.Drawing.Size(833, 679);
             this.groupBox1.TabIndex = 25;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Location";
             // 
             // FindAdressButton
             // 
-            this.FindAdressButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.FindAdressButton.Location = new System.Drawing.Point(338, 410);
+            this.FindAdressButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.FindAdressButton.Location = new System.Drawing.Point(697, 647);
             this.FindAdressButton.Name = "FindAdressButton";
             this.FindAdressButton.Size = new System.Drawing.Size(130, 26);
             this.FindAdressButton.TabIndex = 25;
@@ -327,16 +335,18 @@
             // 
             // AdressBox
             // 
-            this.AdressBox.Location = new System.Drawing.Point(6, 416);
+            this.AdressBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.AdressBox.Location = new System.Drawing.Point(6, 651);
             this.AdressBox.Name = "AdressBox";
-            this.AdressBox.Size = new System.Drawing.Size(326, 20);
+            this.AdressBox.Size = new System.Drawing.Size(685, 20);
             this.AdressBox.TabIndex = 25;
             // 
             // trackBar
             // 
             this.trackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBar.BackColor = System.Drawing.SystemColors.Info;
-            this.trackBar.Location = new System.Drawing.Point(426, 16);
+            this.trackBar.Location = new System.Drawing.Point(785, 16);
             this.trackBar.Name = "trackBar";
             this.trackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBar.Size = new System.Drawing.Size(45, 104);
@@ -346,6 +356,12 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.lblHyper);
+            this.panel1.Controls.Add(this.txtHyper);
+            this.panel1.Controls.Add(this.txtSuper);
+            this.panel1.Controls.Add(this.lblSuper);
+            this.panel1.Controls.Add(this.comboBox1);
+            this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.ImageSizeBox);
             this.panel1.Controls.Add(this.EmailLoginText);
@@ -382,9 +398,43 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(9, 9);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(212, 442);
+            this.panel1.Size = new System.Drawing.Size(212, 679);
             this.panel1.TabIndex = 26;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(3, 344);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(80, 13);
+            this.label8.TabIndex = 33;
+            this.label8.Text = "Pokeball mode:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 249);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(100, 13);
+            this.label7.TabIndex = 32;
+            this.label7.Text = "PokeUi Image Size:";
+            // 
+            // ImageSizeBox
+            // 
+            this.ImageSizeBox.Location = new System.Drawing.Point(104, 246);
+            this.ImageSizeBox.Name = "ImageSizeBox";
+            this.ImageSizeBox.Size = new System.Drawing.Size(100, 20);
+            this.ImageSizeBox.TabIndex = 31;
+            // 
+            // EmailLoginText
+            // 
+            this.EmailLoginText.AutoSize = true;
+            this.EmailLoginText.Location = new System.Drawing.Point(3, 36);
+            this.EmailLoginText.Name = "EmailLoginText";
+            this.EmailLoginText.Size = new System.Drawing.Size(35, 13);
+            this.EmailLoginText.TabIndex = 27;
+            this.EmailLoginText.Text = "Email:";
             // 
             // CatchPokemonBox
             // 
@@ -396,6 +446,15 @@
             this.CatchPokemonBox.UseVisualStyleBackColor = true;
             this.CatchPokemonBox.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // EmailPasswordText
+            // 
+            this.EmailPasswordText.AutoSize = true;
+            this.EmailPasswordText.Location = new System.Drawing.Point(3, 62);
+            this.EmailPasswordText.Name = "EmailPasswordText";
+            this.EmailPasswordText.Size = new System.Drawing.Size(56, 13);
+            this.EmailPasswordText.TabIndex = 28;
+            this.EmailPasswordText.Text = "Password:";
+            // 
             // CatchPokemonText
             // 
             this.CatchPokemonText.AutoSize = true;
@@ -405,6 +464,20 @@
             this.CatchPokemonText.TabIndex = 25;
             this.CatchPokemonText.Text = "Catch Pokemon:";
             this.CatchPokemonText.Click += new System.EventHandler(this.label7_Click);
+            // 
+            // EmailPasswordBox
+            // 
+            this.EmailPasswordBox.Location = new System.Drawing.Point(68, 62);
+            this.EmailPasswordBox.Name = "EmailPasswordBox";
+            this.EmailPasswordBox.Size = new System.Drawing.Size(136, 20);
+            this.EmailPasswordBox.TabIndex = 30;
+            // 
+            // EmailLoginBox
+            // 
+            this.EmailLoginBox.Location = new System.Drawing.Point(68, 33);
+            this.EmailLoginBox.Name = "EmailLoginBox";
+            this.EmailLoginBox.Size = new System.Drawing.Size(136, 20);
+            this.EmailLoginBox.TabIndex = 29;
             // 
             // transferIVThresText
             // 
@@ -417,7 +490,7 @@
             // TravelSpeedText
             // 
             this.TravelSpeedText.AutoSize = true;
-            this.TravelSpeedText.Location = new System.Drawing.Point(3, 275);
+            this.TravelSpeedText.Location = new System.Drawing.Point(2, 275);
             this.TravelSpeedText.Name = "TravelSpeedText";
             this.TravelSpeedText.Size = new System.Drawing.Size(102, 13);
             this.TravelSpeedText.TabIndex = 23;
@@ -441,59 +514,55 @@
             this.label6.Text = "IV Threshold:";
             this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
-            // EmailLoginText
+            // comboBox1
             // 
-            this.EmailLoginText.AutoSize = true;
-            this.EmailLoginText.Location = new System.Drawing.Point(3, 36);
-            this.EmailLoginText.Name = "EmailLoginText";
-            this.EmailLoginText.Size = new System.Drawing.Size(35, 13);
-            this.EmailLoginText.TabIndex = 27;
-            this.EmailLoginText.Text = "Email:";
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "IV",
+            "CP"});
+            this.comboBox1.Location = new System.Drawing.Point(104, 341);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(100, 21);
+            this.comboBox1.TabIndex = 34;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // EmailPasswordText
+            // lblSuper
             // 
-            this.EmailPasswordText.AutoSize = true;
-            this.EmailPasswordText.Location = new System.Drawing.Point(3, 62);
-            this.EmailPasswordText.Name = "EmailPasswordText";
-            this.EmailPasswordText.Size = new System.Drawing.Size(56, 13);
-            this.EmailPasswordText.TabIndex = 28;
-            this.EmailPasswordText.Text = "Password:";
+            this.lblSuper.AutoSize = true;
+            this.lblSuper.Location = new System.Drawing.Point(3, 371);
+            this.lblSuper.Name = "lblSuper";
+            this.lblSuper.Size = new System.Drawing.Size(86, 13);
+            this.lblSuper.TabIndex = 35;
+            this.lblSuper.Text = "CP for Superball:";
             // 
-            // EmailLoginBox
+            // txtSuper
             // 
-            this.EmailLoginBox.Location = new System.Drawing.Point(68, 33);
-            this.EmailLoginBox.Name = "EmailLoginBox";
-            this.EmailLoginBox.Size = new System.Drawing.Size(136, 20);
-            this.EmailLoginBox.TabIndex = 29;
+            this.txtSuper.Location = new System.Drawing.Point(104, 368);
+            this.txtSuper.Name = "txtSuper";
+            this.txtSuper.Size = new System.Drawing.Size(100, 20);
+            this.txtSuper.TabIndex = 36;
             // 
-            // EmailPasswordBox
+            // txtHyper
             // 
-            this.EmailPasswordBox.Location = new System.Drawing.Point(68, 62);
-            this.EmailPasswordBox.Name = "EmailPasswordBox";
-            this.EmailPasswordBox.Size = new System.Drawing.Size(136, 20);
-            this.EmailPasswordBox.TabIndex = 30;
+            this.txtHyper.Location = new System.Drawing.Point(104, 394);
+            this.txtHyper.Name = "txtHyper";
+            this.txtHyper.Size = new System.Drawing.Size(100, 20);
+            this.txtHyper.TabIndex = 37;
             // 
-            // label7
+            // lblHyper
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 249);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(100, 13);
-            this.label7.TabIndex = 32;
-            this.label7.Text = "PokeUi Image Size:";
-            // 
-            // ImageSizeBox
-            // 
-            this.ImageSizeBox.Location = new System.Drawing.Point(104, 246);
-            this.ImageSizeBox.Name = "ImageSizeBox";
-            this.ImageSizeBox.Size = new System.Drawing.Size(100, 20);
-            this.ImageSizeBox.TabIndex = 31;
+            this.lblHyper.AutoSize = true;
+            this.lblHyper.Location = new System.Drawing.Point(3, 397);
+            this.lblHyper.Name = "lblHyper";
+            this.lblHyper.Size = new System.Drawing.Size(86, 13);
+            this.lblHyper.TabIndex = 38;
+            this.lblHyper.Text = "CP for Hyperball:";
             // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 460);
+            this.ClientSize = new System.Drawing.Size(1063, 697);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -555,5 +624,11 @@
         private System.Windows.Forms.TextBox EmailPasswordBox;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox ImageSizeBox;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblHyper;
+        private System.Windows.Forms.TextBox txtHyper;
+        private System.Windows.Forms.TextBox txtSuper;
+        private System.Windows.Forms.Label lblSuper;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

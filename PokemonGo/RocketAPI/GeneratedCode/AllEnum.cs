@@ -367,6 +367,15 @@ namespace AllEnum
 
     #region Enums
 
+    public enum TravelMode
+    {
+        FarmAllInRange,
+        FarmAllWithoutSaving,
+        FarmAllWithSaving,
+        GoWhereYouWantButFarm,
+        FarmXPokestop
+    };
+
     public enum RpcDirection
     {
         [pbr::OriginalName("UNKNOWN")] Unknown = 0,

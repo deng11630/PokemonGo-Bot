@@ -32,6 +32,13 @@ namespace PokemonGo.RocketAPI.Window
         public static int imageSize;
         public static string poke;
 
+        public static string pokeballMode;
+        public static int cpToUseSuperBall;
+        public static int cpToUseHyperBall;
+        public static int IVToUseSuperBall;
+        public static int IVToUseHyperBall;
+        public static AllEnum.TravelMode travelMode;
+
 
         public static void Load(Settings settings)
         {
@@ -57,7 +64,12 @@ namespace PokemonGo.RocketAPI.Window
             maxPokemonsOnInventory = 220;
             imageSize = settings.ImageSize;
             poke = settings.Poke;
-        }
+            pokeballMode = settings.pokeballMode;
+            cpToUseSuperBall = settings.cpToUseSuperBall;
+            cpToUseHyperBall = settings.cpToUseHyperBall;
+            IVToUseSuperBall = settings.IVToUseSuperBall;
+            IVToUseHyperBall = settings.IVToUseHyperBall;
+    }
 
     }
 }

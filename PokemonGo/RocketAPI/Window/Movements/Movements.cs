@@ -269,5 +269,10 @@ namespace PokemonGo.RocketAPI.Window
             farmingStops = false;
         }
 
+        public static async Task FarmXPokestop(Client client)
+        {
+
+        }
+
     }
 }
