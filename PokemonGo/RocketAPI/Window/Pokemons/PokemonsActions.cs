@@ -108,7 +108,7 @@ namespace PokemonGo.RocketAPI.Window
 
         private static async Task TransfertPokemon(PokemonData pokemon)
         {
-            if (CatchesEvolveTransfersSettings.toTransfert.Contains((AllEnum.PokemonId)pokemon.Id))
+            if (CatchesEvolveTransfersSettings.toTransfert.Contains(pokemon.PokemonId))
             {
                 var transferPokemonResponse = await client.TransferPokemon(pokemon.Id);
                 ConsoleWriter.TransferedPokemon(pokemon, transferPokemonResponse);
