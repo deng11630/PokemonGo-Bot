@@ -51,7 +51,7 @@ namespace PokemonGo.RocketAPI.Window
         public bool EvolveAllGivenPokemons => GetSetting() != string.Empty && Convert.ToBoolean(GetSetting(), CultureInfo.InvariantCulture);
         public bool CatchPokemon => GetSetting() != string.Empty && Convert.ToBoolean(GetSetting(), CultureInfo.InvariantCulture);
 
-        public string pokeballMode => GetSetting();
+        public string pokeballMode => GetSetting() != string.Empty ? GetSetting() : "IV";
         public int cpToUseSuperBall => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 250;
         public int cpToUseHyperBall => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 500;
         public int IVToUseSuperBall => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 75;
