@@ -149,16 +149,8 @@ namespace PokemonGo.RocketAPI.Window
 
         private Image GetPokemonImage(int pokemonId)
         {
-            var Sprites = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\Sprites\\";
-            string location = Sprites + pokemonId + ".png";
-            if (!Directory.Exists(Sprites))
-                Directory.CreateDirectory(Sprites);
-            if (!File.Exists(location))
-            {
-                WebClient wc = new WebClient();
-                wc.DownloadFile("http://pokeapi.co/media/sprites/pokemon/" + pokemonId + ".png", @location);
-            }
-            return Image.FromFile(location);
+            Image Sprites = (Image)Properties.Resources.ResourceManager.GetObject("_" + pokemonId.ToString());
+            return Sprites;
         }
 
         private void pkmList_SelectionChanged(object sender, EventArgs e)
