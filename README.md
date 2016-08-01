@@ -5,8 +5,7 @@
 
 #Window
 ![alt tag](https://github.com/mfron/PokemonGo-Bot/blob/master/BotInterface.png)
-![alt tag](https://github.com/DetectiveSquirrel/Pokemon-Go-Rocket-API/blob/master/MainPokeUi.png)
-![alt tag](https://github.com/DetectiveSquirrel/Pokemon-Go-Rocket-API/blob/master/MainSettings2.png)
+![alt tag](https://github.com/mfron/PokemonGo-Bot/blob/master/settings%20pokemongo.png)
 
 
 A Pokémon Go bot in C#
