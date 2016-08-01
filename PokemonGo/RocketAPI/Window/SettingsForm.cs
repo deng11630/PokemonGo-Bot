@@ -176,7 +176,9 @@ namespace PokemonGo.RocketAPI.Window
                     break;
             }
 
+            
             Settings.Instance.Reload();
+            ReadSettings.Load(Settings.Instance);
             Close();
         }
 
