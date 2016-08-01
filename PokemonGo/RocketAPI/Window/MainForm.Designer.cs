@@ -38,6 +38,7 @@
             this.todoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useLuckyEggToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.forceUnbanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pokémonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAllToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
@@ -58,7 +59,8 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.pokémonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
@@ -141,6 +143,13 @@
             this.forceUnbanToolStripMenuItem.Text = "Force Unban";
             this.forceUnbanToolStripMenuItem.Click += new System.EventHandler(this.forceUnbanToolStripMenuItem_Click);
             // 
+            // pokémonToolStripMenuItem
+            // 
+            this.pokémonToolStripMenuItem.Name = "pokémonToolStripMenuItem";
+            this.pokémonToolStripMenuItem.Size = new System.Drawing.Size(70, 20);
+            this.pokémonToolStripMenuItem.Text = "Pokémon";
+            this.pokémonToolStripMenuItem.Click += new System.EventHandler(this.pokémonToolStripMenuItem_Click);
+            // 
             // showAllToolStripMenuItem
             // 
             this.showAllToolStripMenuItem.Name = "showAllToolStripMenuItem";
@@ -208,7 +217,6 @@
             this.objectListView1.GridLines = true;
             this.objectListView1.LargeImageList = this.largePokemonImageList;
             this.objectListView1.Location = new System.Drawing.Point(0, 399);
-            this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.RowHeight = 32;
             this.objectListView1.SelectAllOnControlA = false;
@@ -298,7 +306,7 @@
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.Location = new System.Drawing.Point(0, 637);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(668, 28);
+            this.button1.Size = new System.Drawing.Size(339, 28);
             this.button1.TabIndex = 26;
             this.button1.Text = "Refresh";
             this.button1.UseVisualStyleBackColor = true;
@@ -349,18 +357,41 @@
             this.tabPage2.Text = ":3";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // pokémonToolStripMenuItem
+            // button2
             // 
-            this.pokémonToolStripMenuItem.Name = "pokémonToolStripMenuItem";
-            this.pokémonToolStripMenuItem.Size = new System.Drawing.Size(70, 20);
-            this.pokémonToolStripMenuItem.Text = "Pokémon";
-            this.pokémonToolStripMenuItem.Click += new System.EventHandler(this.pokémonToolStripMenuItem_Click);
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(392, 638);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(135, 28);
+            this.button2.TabIndex = 28;
+            this.button2.Text = "Tranfer Selected";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Location = new System.Drawing.Point(533, 638);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(135, 28);
+            this.button3.TabIndex = 29;
+            this.button3.Text = "Evolve Selected";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1012, 690);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.gMapControl1);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.button1);
@@ -420,5 +451,7 @@
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.RichTextBox logTextBox;
         private System.Windows.Forms.ToolStripMenuItem pokémonToolStripMenuItem;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
