@@ -149,7 +149,7 @@ namespace PokemonGo.RocketAPI.Window
 
         private Image GetPokemonImage(int pokemonId)
         {
-            var Sprites = AppDomain.CurrentDomain.BaseDirectory + "Sprites\\";
+            var Sprites = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\Sprites\\";
             string location = Sprites + pokemonId + ".png";
             if (!Directory.Exists(Sprites))
                 Directory.CreateDirectory(Sprites);

@@ -77,6 +77,7 @@ namespace PokemonGo.RocketAPI.Window
             ColoredConsoleWrite(Color.DarkGray, "Stardust: " + profile.Profile.Currency.ToArray()[1].Amount + "\n");
             ColoredConsoleWrite(Color.DarkGray, "Latitude: " + ReadSettings.defaultLatitude);
             ColoredConsoleWrite(Color.DarkGray, "Longitude: " + ReadSettings.defaultLongitude);
+            ColoredConsoleWrite(Color.Green, "For every bug, contact me www.github.com/mfron/Pokemon-Go-Bot");
             ColoredConsoleWrite(Color.Yellow, "----------------------------");
         }
 
@@ -185,10 +186,7 @@ namespace PokemonGo.RocketAPI.Window
             else if (pokestops.Count < 150)
                 ConsoleWriter.ColoredConsoleWrite(Color.Yellow, $"Great place, {pokestops.Count} pokestops near you");
             else
-            {
                 ConsoleWriter.ColoredConsoleWrite(Color.Pink, $"Wouw ! Excelente place, {pokestops.Count} pokestops near you");
-                ConsoleWriter.ColoredConsoleWrite(Color.Red, $"Please share your position with the communauty https://github.com/mfron/Pokemon-Go-Bot/issues");
-            }
             return true;  
         }
 

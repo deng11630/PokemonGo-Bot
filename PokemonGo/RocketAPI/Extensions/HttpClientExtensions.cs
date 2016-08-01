@@ -48,7 +48,7 @@ namespace PokemonGo.RocketAPI.Extensions
                 goto START;
             }
             if (response.Payload.Count < 1)
-                throw new Exception("No response on the request");
+                throw new Exception("Pokemon server ignored the request. Lets restart the bot.");
             payload = response.Payload[0];
             var parsedPayload = new TResponsePayload();
             parsedPayload.MergeFrom(payload);
