@@ -88,7 +88,7 @@ namespace PokemonGo.RocketAPI.Window
                 PokemonData pokemon = (PokemonData)e.Model;
                 if (e.ColumnIndex == 6)
                 {
-                    TransferPokemon(pokemon);
+                    transferPokemon(pokemon);
                 }
                 else if (e.ColumnIndex == 7)
                 {
@@ -96,35 +96,45 @@ namespace PokemonGo.RocketAPI.Window
                 }
                 else if (e.ColumnIndex == 8)
                 {
-                    EvolvePokemon(pokemon);
+                    evolvePokemon(pokemon);
                 }
             }
             catch (Exception ex) { ConsoleWriter.ColoredConsoleWrite(Color.Red, ex.ToString()); client = null; ReloadPokemonList(); }
         }
 
 
-        private async void TransferPokemon(PokemonData pokemon)
+        private static async Task transferPokemon(PokemonData pokemon)
         {
-            if (MessageBox.Show($"Are you sure you want to transfer {pokemon.PokemonId.ToString()} with {pokemon.Cp} CP?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            try
             {
-                var transferPokemonResponse = await client.TransferPokemon(pokemon.Id);
-                string message = "";
-                string caption = "";
-
-                if (transferPokemonResponse.Status == 1)
+                if (MessageBox.Show($"Are you sure you want to transfer {pokemon.PokemonId.ToString()} with {pokemon.Cp} CP?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    message = $"{pokemon.PokemonId} was transferred\n{transferPokemonResponse.CandyAwarded} candy awarded";
-                    caption = $"{pokemon.PokemonId} transferred";
-                    ReloadPokemonList();
-                }
-                else
-                {
-                    message = $"{pokemon.PokemonId} could not be transferred";
-                    caption = $"Transfer {pokemon.PokemonId} failed";
-                }
+                    var transferPokemonResponse = await client.TransferPokemon(pokemon.Id);
+                    string message = "";
+                    string caption = "";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    DialogResult result;
 
-                MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (transferPokemonResponse.Status == 1)
+                    {
+                        message = $"{pokemon.PokemonId} was transferred\n{transferPokemonResponse.CandyAwarded} candy awarded";
+                        caption = $"{pokemon.PokemonId} transferred";
+                    }
+                    else
+                    {
+                        message = $"{pokemon.PokemonId} could not be transferred";
+                        caption = $"Transfer {pokemon.PokemonId} failed";
+                    }
+
+                    result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Information);
+                }
             }
+            catch (TaskCanceledException) { await transferPokemon(pokemon); }
+            catch (UriFormatException) { await transferPokemon(pokemon); }
+            catch (ArgumentOutOfRangeException) { await transferPokemon(pokemon); }
+            catch (ArgumentNullException) { await transferPokemon(pokemon); }
+            catch (NullReferenceException) { await transferPokemon(pokemon); }
+            catch (Exception ex) { await transferPokemon(pokemon); }
         }
 
         private async void PowerUpPokemon(PokemonData pokemon)
@@ -148,25 +158,35 @@ namespace PokemonGo.RocketAPI.Window
             MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private async void EvolvePokemon(PokemonData pokemon)
+        private static async Task evolvePokemon(PokemonData pokemon)
         {
-            var evolvePokemonResponse = await client.EvolvePokemon(pokemon.Id);
-            string message = "";
-            string caption = "";
-
-            if (evolvePokemonResponse.Result == 1)
+            try
             {
-                message = $"{pokemon.PokemonId} successfully evolved into {evolvePokemonResponse.EvolvedPokemon.PokemonType}\n{evolvePokemonResponse.ExpAwarded} experience awarded\n{evolvePokemonResponse.CandyAwarded} candy awarded";
-                caption = $"{pokemon.PokemonId} evolved into {evolvePokemonResponse.EvolvedPokemon.PokemonType}";
-                ReloadPokemonList();
-            }
-            else
-            {
-                message = $"{pokemon.PokemonId} could not be evolved";
-                caption = $"Evolve {pokemon.PokemonId} failed";
-            }
+                var evolvePokemonResponse = await client.EvolvePokemon(pokemon.Id);
+                string message = "";
+                string caption = "";
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                DialogResult result;
 
-            MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (evolvePokemonResponse.Result == 1)
+                {
+                    message = $"{pokemon.PokemonId} successfully evolved into {evolvePokemonResponse.EvolvedPokemon.PokemonType}\n{evolvePokemonResponse.ExpAwarded} experience awarded\n{evolvePokemonResponse.CandyAwarded} candy awarded";
+                    caption = $"{pokemon.PokemonId} evolved into {evolvePokemonResponse.EvolvedPokemon.PokemonType}";
+                }
+                else
+                {
+                    message = $"{pokemon.PokemonId} could not be evolved";
+                    caption = $"Evolve {pokemon.PokemonId} failed";
+                }
+
+                result = MessageBox.Show(message, caption, buttons, MessageBoxIcon.Information);
+            }
+            catch (TaskCanceledException) { await evolvePokemon(pokemon); }
+            catch (UriFormatException) { await evolvePokemon(pokemon); }
+            catch (ArgumentOutOfRangeException) { await evolvePokemon(pokemon); }
+            catch (ArgumentNullException) { await evolvePokemon(pokemon); }
+            catch (NullReferenceException) { await evolvePokemon(pokemon); }
+            catch (Exception ex) { await evolvePokemon(pokemon); }
         }
 
 
@@ -582,11 +602,15 @@ namespace PokemonGo.RocketAPI.Window
         private async void ReloadPokemonList()
         {
             button1.Enabled = false;
+            button2.Enabled = false;
+            button3.Enabled = false;
             objectListView1.Enabled = false;
             var currentScrollPosition = objectListView1.LowLevelScrollPosition;
             objectListView1.SetObjects(Inventory.pokemons);
             objectListView1.LowLevelScroll(currentScrollPosition.X, currentScrollPosition.Y);
             button1.Enabled = true;
+            button2.Enabled = true;
+            button3.Enabled = true;
             objectListView1.Enabled = true;
         }
 
@@ -602,6 +626,24 @@ namespace PokemonGo.RocketAPI.Window
         {
             var pokemonList = new PokemonList();
             pokemonList.Show();
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            foreach (PokemonData selectedPokemon in objectListView1.SelectedObjects)
+            {
+                await transferPokemon(selectedPokemon);
+            }
+            ReloadPokemonList();
+        }
+
+        private async void button3_Click(object sender, EventArgs e)
+        {
+            foreach (PokemonData selectedPokemon in objectListView1.SelectedObjects)
+            {
+                await evolvePokemon(selectedPokemon);
+            }
+            ReloadPokemonList();
         }
     }
 }
