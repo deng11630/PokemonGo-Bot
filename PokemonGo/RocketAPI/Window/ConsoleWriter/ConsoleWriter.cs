@@ -1,11 +1,13 @@
 ﻿using PokemonGo.RocketAPI.GeneratedCode;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PokemonGo.RocketAPI.Window
 {
@@ -17,7 +19,9 @@ namespace PokemonGo.RocketAPI.Window
         {
             try
             {
-                ColoredConsoleWrite(Color.Green, "Your version is 3.1.0");
+                string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                version = version.Substring(0, version.Length - 2);
+                ColoredConsoleWrite(Color.Green, "Your version is " + version);
                 ColoredConsoleWrite(Color.Green, "You can find it at www.github.com/mfron/Pokemon-Go-Bot");
             }
             catch (Exception)
