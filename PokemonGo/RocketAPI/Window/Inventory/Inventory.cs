@@ -58,52 +58,24 @@ namespace PokemonGo.RocketAPI.Window
         }
 
 
-        public static MiscEnums.Item GetPokeballToUse(int? pokemonCP)
+        public static MiscEnums.Item GetPokeballToUse(int? pokemonCP, int pokemonIV)
         {
-
-            // Use better balls for high CP pokemon
-            if (masterBallsCount > 0 && pokemonCP >= 1000)
+            if (ReadSettings.pokeballMode == "CP")
             {
-             //   ColoredConsoleWrite(ConsoleColor.Green, $"Master Ball is being used");
-                return MiscEnums.Item.ITEM_MASTER_BALL;
-            }
-
-            if (ultraBallsCount > 0 && pokemonCP >= 600)
-            {
-              //  ColoredConsoleWrite(ConsoleColor.Green, $"Ultra Ball is being used");
-                return MiscEnums.Item.ITEM_ULTRA_BALL;
-            }
-
-            if (greatBallsCount > 0 && pokemonCP >= 350)
-            {
-             //   ColoredConsoleWrite(ConsoleColor.Green, $"Great Ball is being used");
-                return MiscEnums.Item.ITEM_GREAT_BALL;
-            }
-
-            // If low CP pokemon, but no more pokeballs; only use better balls if pokemon are of semi-worthy quality
-            if (pokeBallsCount > 0)
-            {
-                //   ColoredConsoleWrite(ConsoleColor.Green, $"Poke Ball is being used");
+                if (pokemonCP > ReadSettings.IVToUseHyperBall)
+                    return MiscEnums.Item.ITEM_ULTRA_BALL;
+                if (pokemonCP > ReadSettings.IVToUseSuperBall)
+                    return MiscEnums.Item.ITEM_GREAT_BALL;
                 return MiscEnums.Item.ITEM_POKE_BALL;
             }
-            else if ((greatBallsCount < 40 && pokemonCP >= 200) || greatBallsCount >= 40)
-            {
-                //   ColoredConsoleWrite(ConsoleColor.Green, $"Great Ball is being used");
-                return MiscEnums.Item.ITEM_GREAT_BALL;
-            }
-            else if (ultraBallsCount > 0 && pokemonCP >= 500)
-            {
-                //   ColoredConsoleWrite(ConsoleColor.Green, $"Ultra Ball is being used");
+            if (pokemonIV > ReadSettings.IVToUseHyperBall)
                 return MiscEnums.Item.ITEM_ULTRA_BALL;
-            }
-            else if (masterBallsCount > 0 && pokemonCP >= 700)
-            {
-                //    ColoredConsoleWrite(ConsoleColor.Green, $"Master Ball is being used");
-                return MiscEnums.Item.ITEM_MASTER_BALL;
-            }
+            if (pokemonIV > ReadSettings.IVToUseSuperBall)
+                return MiscEnums.Item.ITEM_GREAT_BALL;
             return MiscEnums.Item.ITEM_POKE_BALL;
         }
-
     }
+
+}
 
 }
