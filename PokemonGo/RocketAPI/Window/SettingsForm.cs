@@ -84,12 +84,23 @@ namespace PokemonGo.RocketAPI.Window
 
         private void SetTravelLabel()
         {
-            switch(comboBox2.SelectedIndex)
+            switch (comboBox2.SelectedIndex)
+            {
+                case 0:
+                    Settings.Instance.SetSetting(txtTravelParam.Text, "deplacementsMaxDist");
+                    break;
+
+                case 4:
+                    Settings.Instance.SetSetting(txtTravelParam.Text, "maxPokestop");
+                    break;
+            }
+            switch (comboBox2.SelectedIndex)
             {
                 case 0:
                     lblTravelParam.Visible = true;
                     txtTravelParam.Visible = true;
                     lblTravelParam.Text = "Range: ";
+                    txtTravelParam.Text = Settings.Instance.deplacementsMaxDist.ToString();
                     break;
 
                 case 1:
@@ -103,6 +114,7 @@ namespace PokemonGo.RocketAPI.Window
                     lblTravelParam.Visible = true;
                     txtTravelParam.Visible = true;
                     lblTravelParam.Text = "# of Pokestop: ";
+                    txtTravelParam.Text = Settings.Instance.maxPokestop.ToString();
                     break;
             }
         }
@@ -153,7 +165,7 @@ namespace PokemonGo.RocketAPI.Window
                     break;
 
                 case 4:
-                    Settings.Instance.SetSetting(txtTravelParam.Text, "deplacementsMaxDist");
+                    Settings.Instance.SetSetting(txtTravelParam.Text, "maxPokestop");
                     break;
             }
 

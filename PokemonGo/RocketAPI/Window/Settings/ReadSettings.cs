@@ -52,7 +52,7 @@ namespace PokemonGo.RocketAPI.Window
             authType = settings.AuthType;
             levelTimeInterval = settings.LevelTimeInterval;
             levelOutput = settings.LevelOutput;
-            deplacementsMaxDist = 1;//km
+            deplacementsMaxDist = settings.deplacementsMaxDist;
             catchPokemon = settings.CatchPokemon;
             defaultLatitude = settings.DefaultLatitude;
             defaultLongitude = settings.DefaultLongitude;
@@ -71,6 +71,7 @@ namespace PokemonGo.RocketAPI.Window
             cpToUseHyperBall = settings.cpToUseHyperBall;
             IVToUseSuperBall = settings.IVToUseSuperBall;
             IVToUseHyperBall = settings.IVToUseHyperBall;
+            maxPokestop = settings.maxPokestop;
 
             switch (travelMode){
                 case AllEnum.TravelMode.FarmAllInRange :
