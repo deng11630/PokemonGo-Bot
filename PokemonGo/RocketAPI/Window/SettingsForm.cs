@@ -100,17 +100,24 @@ namespace PokemonGo.RocketAPI.Window
                     lblTravelParam.Visible = true;
                     txtTravelParam.Visible = true;
                     lblTravelParam.Text = "Range (km): ";
+                    ReadSettings.travelMode = AllEnum.TravelMode.FarmAllInRange;
                     txtTravelParam.Text = Settings.Instance.deplacementsMaxDist.ToString();
                     break;
 
                 case 1:
+                    ReadSettings.travelMode = AllEnum.TravelMode.FarmAllWithoutSaving;
+                    break;
                 case 2:
+                    ReadSettings.travelMode = AllEnum.TravelMode.FarmAllWithSaving;
+                    break;
                 case 3:
+                    ReadSettings.travelMode = AllEnum.TravelMode.GoWhereYouWantButFarm;
                     lblTravelParam.Visible = false;
                     txtTravelParam.Visible = false;
                     break;
 
                 case 4:
+                    ReadSettings.travelMode = AllEnum.TravelMode.FarmXPokestop;
                     lblTravelParam.Visible = true;
                     txtTravelParam.Visible = true;
                     lblTravelParam.Text = "# of Pokestop: ";
