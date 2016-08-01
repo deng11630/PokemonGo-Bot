@@ -55,6 +55,13 @@
             this.AdressBox = new System.Windows.Forms.TextBox();
             this.trackBar = new System.Windows.Forms.TrackBar();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lblHyper = new System.Windows.Forms.Label();
+            this.txtHyper = new System.Windows.Forms.TextBox();
+            this.txtSuper = new System.Windows.Forms.TextBox();
+            this.lblSuper = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.ImageSizeBox = new System.Windows.Forms.TextBox();
@@ -68,11 +75,8 @@
             this.TravelSpeedText = new System.Windows.Forms.Label();
             this.TravelSpeedBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.lblSuper = new System.Windows.Forms.Label();
-            this.txtSuper = new System.Windows.Forms.TextBox();
-            this.txtHyper = new System.Windows.Forms.TextBox();
-            this.lblHyper = new System.Windows.Forms.Label();
+            this.lblTravelParam = new System.Windows.Forms.Label();
+            this.txtTravelParam = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.panel1.SuspendLayout();
@@ -96,7 +100,7 @@
             "Ptc"});
             this.authTypeCb.Location = new System.Drawing.Point(68, 4);
             this.authTypeCb.Name = "authTypeCb";
-            this.authTypeCb.Size = new System.Drawing.Size(136, 21);
+            this.authTypeCb.Size = new System.Drawing.Size(155, 21);
             this.authTypeCb.TabIndex = 1;
             this.authTypeCb.SelectedIndexChanged += new System.EventHandler(this.authTypeCb_SelectedIndexChanged);
             // 
@@ -157,7 +161,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 321);
+            this.label3.Location = new System.Drawing.Point(3, 295);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(91, 13);
             this.label3.TabIndex = 8;
@@ -201,7 +205,7 @@
             this.latitudeText.Location = new System.Drawing.Point(104, 85);
             this.latitudeText.Name = "latitudeText";
             this.latitudeText.ReadOnly = true;
-            this.latitudeText.Size = new System.Drawing.Size(100, 20);
+            this.latitudeText.Size = new System.Drawing.Size(119, 20);
             this.latitudeText.TabIndex = 13;
             // 
             // longitudeText
@@ -209,7 +213,7 @@
             this.longitudeText.Location = new System.Drawing.Point(104, 111);
             this.longitudeText.Name = "longitudeText";
             this.longitudeText.ReadOnly = true;
-            this.longitudeText.Size = new System.Drawing.Size(100, 20);
+            this.longitudeText.Size = new System.Drawing.Size(119, 20);
             this.longitudeText.TabIndex = 14;
             // 
             // razzmodeCb
@@ -220,14 +224,14 @@
             "cp"});
             this.razzmodeCb.Location = new System.Drawing.Point(104, 137);
             this.razzmodeCb.Name = "razzmodeCb";
-            this.razzmodeCb.Size = new System.Drawing.Size(100, 21);
+            this.razzmodeCb.Size = new System.Drawing.Size(119, 21);
             this.razzmodeCb.TabIndex = 15;
             // 
             // razzSettingText
             // 
             this.razzSettingText.Location = new System.Drawing.Point(104, 164);
             this.razzSettingText.Name = "razzSettingText";
-            this.razzSettingText.Size = new System.Drawing.Size(100, 20);
+            this.razzSettingText.Size = new System.Drawing.Size(119, 20);
             this.razzSettingText.TabIndex = 16;
             // 
             // transferTypeCb
@@ -243,7 +247,7 @@
             "All"});
             this.transferTypeCb.Location = new System.Drawing.Point(104, 190);
             this.transferTypeCb.Name = "transferTypeCb";
-            this.transferTypeCb.Size = new System.Drawing.Size(100, 21);
+            this.transferTypeCb.Size = new System.Drawing.Size(119, 21);
             this.transferTypeCb.TabIndex = 17;
             this.transferTypeCb.SelectedIndexChanged += new System.EventHandler(this.transferTypeCb_SelectedIndexChanged);
             // 
@@ -258,7 +262,7 @@
             // evolveAllChk
             // 
             this.evolveAllChk.AutoSize = true;
-            this.evolveAllChk.Location = new System.Drawing.Point(104, 321);
+            this.evolveAllChk.Location = new System.Drawing.Point(104, 295);
             this.evolveAllChk.Name = "evolveAllChk";
             this.evolveAllChk.Size = new System.Drawing.Size(15, 14);
             this.evolveAllChk.TabIndex = 19;
@@ -271,7 +275,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.saveBtn.Location = new System.Drawing.Point(0, 578);
             this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(198, 95);
+            this.saveBtn.Size = new System.Drawing.Size(229, 95);
             this.saveBtn.TabIndex = 20;
             this.saveBtn.Text = "Save";
             this.saveBtn.UseVisualStyleBackColor = true;
@@ -302,7 +306,7 @@
             this.gMapControl1.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
             this.gMapControl1.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gMapControl1.ShowTileGridLines = false;
-            this.gMapControl1.Size = new System.Drawing.Size(827, 625);
+            this.gMapControl1.Size = new System.Drawing.Size(810, 625);
             this.gMapControl1.TabIndex = 22;
             this.gMapControl1.Zoom = 0D;
             this.gMapControl1.Load += new System.EventHandler(this.gMapControl1_Load);
@@ -315,9 +319,9 @@
             this.groupBox1.Controls.Add(this.trackBar);
             this.groupBox1.Controls.Add(this.gMapControl1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(221, 9);
+            this.groupBox1.Location = new System.Drawing.Point(238, 9);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(833, 679);
+            this.groupBox1.Size = new System.Drawing.Size(816, 679);
             this.groupBox1.TabIndex = 25;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Location";
@@ -325,7 +329,7 @@
             // FindAdressButton
             // 
             this.FindAdressButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.FindAdressButton.Location = new System.Drawing.Point(697, 647);
+            this.FindAdressButton.Location = new System.Drawing.Point(680, 647);
             this.FindAdressButton.Name = "FindAdressButton";
             this.FindAdressButton.Size = new System.Drawing.Size(130, 26);
             this.FindAdressButton.TabIndex = 25;
@@ -339,14 +343,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.AdressBox.Location = new System.Drawing.Point(6, 651);
             this.AdressBox.Name = "AdressBox";
-            this.AdressBox.Size = new System.Drawing.Size(685, 20);
+            this.AdressBox.Size = new System.Drawing.Size(668, 20);
             this.AdressBox.TabIndex = 25;
             // 
             // trackBar
             // 
             this.trackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBar.BackColor = System.Drawing.SystemColors.Info;
-            this.trackBar.Location = new System.Drawing.Point(785, 16);
+            this.trackBar.Location = new System.Drawing.Point(768, 16);
             this.trackBar.Name = "trackBar";
             this.trackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBar.Size = new System.Drawing.Size(45, 104);
@@ -356,6 +360,10 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.txtTravelParam);
+            this.panel1.Controls.Add(this.lblTravelParam);
+            this.panel1.Controls.Add(this.comboBox2);
+            this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.lblHyper);
             this.panel1.Controls.Add(this.txtHyper);
             this.panel1.Controls.Add(this.txtSuper);
@@ -398,14 +406,82 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(9, 9);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(212, 679);
+            this.panel1.Size = new System.Drawing.Size(229, 679);
             this.panel1.TabIndex = 26;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "All in range",
+            "All without saving",
+            "All with saving",
+            "No Pokéstop",
+            "X Pokéstop"});
+            this.comboBox2.Location = new System.Drawing.Point(104, 394);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(119, 21);
+            this.comboBox2.TabIndex = 40;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(3, 397);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(69, 13);
+            this.label9.TabIndex = 39;
+            this.label9.Text = "Travel mode:";
+            // 
+            // lblHyper
+            // 
+            this.lblHyper.AutoSize = true;
+            this.lblHyper.Location = new System.Drawing.Point(3, 371);
+            this.lblHyper.Name = "lblHyper";
+            this.lblHyper.Size = new System.Drawing.Size(86, 13);
+            this.lblHyper.TabIndex = 38;
+            this.lblHyper.Text = "CP for Hyperball:";
+            // 
+            // txtHyper
+            // 
+            this.txtHyper.Location = new System.Drawing.Point(104, 368);
+            this.txtHyper.Name = "txtHyper";
+            this.txtHyper.Size = new System.Drawing.Size(119, 20);
+            this.txtHyper.TabIndex = 37;
+            // 
+            // txtSuper
+            // 
+            this.txtSuper.Location = new System.Drawing.Point(104, 342);
+            this.txtSuper.Name = "txtSuper";
+            this.txtSuper.Size = new System.Drawing.Size(119, 20);
+            this.txtSuper.TabIndex = 36;
+            // 
+            // lblSuper
+            // 
+            this.lblSuper.AutoSize = true;
+            this.lblSuper.Location = new System.Drawing.Point(3, 345);
+            this.lblSuper.Name = "lblSuper";
+            this.lblSuper.Size = new System.Drawing.Size(86, 13);
+            this.lblSuper.TabIndex = 35;
+            this.lblSuper.Text = "CP for Superball:";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "IV",
+            "CP"});
+            this.comboBox1.Location = new System.Drawing.Point(104, 315);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(119, 21);
+            this.comboBox1.TabIndex = 34;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(3, 344);
+            this.label8.Location = new System.Drawing.Point(3, 318);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(80, 13);
             this.label8.TabIndex = 33;
@@ -424,7 +500,7 @@
             // 
             this.ImageSizeBox.Location = new System.Drawing.Point(104, 246);
             this.ImageSizeBox.Name = "ImageSizeBox";
-            this.ImageSizeBox.Size = new System.Drawing.Size(100, 20);
+            this.ImageSizeBox.Size = new System.Drawing.Size(119, 20);
             this.ImageSizeBox.TabIndex = 31;
             // 
             // EmailLoginText
@@ -439,7 +515,7 @@
             // CatchPokemonBox
             // 
             this.CatchPokemonBox.AutoSize = true;
-            this.CatchPokemonBox.Location = new System.Drawing.Point(104, 298);
+            this.CatchPokemonBox.Location = new System.Drawing.Point(104, 272);
             this.CatchPokemonBox.Name = "CatchPokemonBox";
             this.CatchPokemonBox.Size = new System.Drawing.Size(15, 14);
             this.CatchPokemonBox.TabIndex = 26;
@@ -458,7 +534,7 @@
             // CatchPokemonText
             // 
             this.CatchPokemonText.AutoSize = true;
-            this.CatchPokemonText.Location = new System.Drawing.Point(3, 298);
+            this.CatchPokemonText.Location = new System.Drawing.Point(3, 272);
             this.CatchPokemonText.Name = "CatchPokemonText";
             this.CatchPokemonText.Size = new System.Drawing.Size(86, 13);
             this.CatchPokemonText.TabIndex = 25;
@@ -469,28 +545,28 @@
             // 
             this.EmailPasswordBox.Location = new System.Drawing.Point(68, 62);
             this.EmailPasswordBox.Name = "EmailPasswordBox";
-            this.EmailPasswordBox.Size = new System.Drawing.Size(136, 20);
+            this.EmailPasswordBox.Size = new System.Drawing.Size(155, 20);
             this.EmailPasswordBox.TabIndex = 30;
             // 
             // EmailLoginBox
             // 
             this.EmailLoginBox.Location = new System.Drawing.Point(68, 33);
             this.EmailLoginBox.Name = "EmailLoginBox";
-            this.EmailLoginBox.Size = new System.Drawing.Size(136, 20);
+            this.EmailLoginBox.Size = new System.Drawing.Size(155, 20);
             this.EmailLoginBox.TabIndex = 29;
             // 
             // transferIVThresText
             // 
             this.transferIVThresText.Location = new System.Drawing.Point(104, 220);
             this.transferIVThresText.Name = "transferIVThresText";
-            this.transferIVThresText.Size = new System.Drawing.Size(100, 20);
+            this.transferIVThresText.Size = new System.Drawing.Size(119, 20);
             this.transferIVThresText.TabIndex = 24;
             this.transferIVThresText.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // TravelSpeedText
             // 
             this.TravelSpeedText.AutoSize = true;
-            this.TravelSpeedText.Location = new System.Drawing.Point(2, 275);
+            this.TravelSpeedText.Location = new System.Drawing.Point(1, 490);
             this.TravelSpeedText.Name = "TravelSpeedText";
             this.TravelSpeedText.Size = new System.Drawing.Size(102, 13);
             this.TravelSpeedText.TabIndex = 23;
@@ -498,9 +574,9 @@
             // 
             // TravelSpeedBox
             // 
-            this.TravelSpeedBox.Location = new System.Drawing.Point(104, 272);
+            this.TravelSpeedBox.Location = new System.Drawing.Point(104, 487);
             this.TravelSpeedBox.Name = "TravelSpeedBox";
-            this.TravelSpeedBox.Size = new System.Drawing.Size(100, 20);
+            this.TravelSpeedBox.Size = new System.Drawing.Size(119, 20);
             this.TravelSpeedBox.TabIndex = 22;
             this.TravelSpeedBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -514,49 +590,21 @@
             this.label6.Text = "IV Threshold:";
             this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
-            // comboBox1
+            // lblTravelParam
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "IV",
-            "CP"});
-            this.comboBox1.Location = new System.Drawing.Point(104, 341);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(100, 21);
-            this.comboBox1.TabIndex = 34;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.lblTravelParam.AutoSize = true;
+            this.lblTravelParam.Location = new System.Drawing.Point(3, 424);
+            this.lblTravelParam.Name = "lblTravelParam";
+            this.lblTravelParam.Size = new System.Drawing.Size(37, 13);
+            this.lblTravelParam.TabIndex = 41;
+            this.lblTravelParam.Text = "Param";
             // 
-            // lblSuper
+            // txtTravelParam
             // 
-            this.lblSuper.AutoSize = true;
-            this.lblSuper.Location = new System.Drawing.Point(3, 371);
-            this.lblSuper.Name = "lblSuper";
-            this.lblSuper.Size = new System.Drawing.Size(86, 13);
-            this.lblSuper.TabIndex = 35;
-            this.lblSuper.Text = "CP for Superball:";
-            // 
-            // txtSuper
-            // 
-            this.txtSuper.Location = new System.Drawing.Point(104, 368);
-            this.txtSuper.Name = "txtSuper";
-            this.txtSuper.Size = new System.Drawing.Size(100, 20);
-            this.txtSuper.TabIndex = 36;
-            // 
-            // txtHyper
-            // 
-            this.txtHyper.Location = new System.Drawing.Point(104, 394);
-            this.txtHyper.Name = "txtHyper";
-            this.txtHyper.Size = new System.Drawing.Size(100, 20);
-            this.txtHyper.TabIndex = 37;
-            // 
-            // lblHyper
-            // 
-            this.lblHyper.AutoSize = true;
-            this.lblHyper.Location = new System.Drawing.Point(3, 397);
-            this.lblHyper.Name = "lblHyper";
-            this.lblHyper.Size = new System.Drawing.Size(86, 13);
-            this.lblHyper.TabIndex = 38;
-            this.lblHyper.Text = "CP for Hyperball:";
+            this.txtTravelParam.Location = new System.Drawing.Point(104, 421);
+            this.txtTravelParam.Name = "txtTravelParam";
+            this.txtTravelParam.Size = new System.Drawing.Size(119, 20);
+            this.txtTravelParam.TabIndex = 42;
             // 
             // SettingsForm
             // 
@@ -630,5 +678,9 @@
         private System.Windows.Forms.TextBox txtSuper;
         private System.Windows.Forms.Label lblSuper;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox txtTravelParam;
+        private System.Windows.Forms.Label lblTravelParam;
     }
 }

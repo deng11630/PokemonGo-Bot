@@ -42,7 +42,9 @@ namespace PokemonGo.RocketAPI.Window
             comboBox1.Text = Settings.Instance.pokeballMode;
             lblSuper.Text = comboBox1.Text + " for Superball:";
             lblHyper.Text = comboBox1.Text + " for Hyperball:";
-            if(comboBox1.Text == "IV")
+            comboBox2.SelectedIndex = Settings.Instance.travelMode;
+            SetTravelLabel();
+            if (comboBox1.Text == "IV")
             {
                 txtSuper.Text = Settings.Instance.IVToUseSuperBall.ToString();
                 txtHyper.Text = Settings.Instance.IVToUseHyperBall.ToString();
@@ -80,6 +82,30 @@ namespace PokemonGo.RocketAPI.Window
             gMapControl1.Zoom = trackBar.Value;
         }
 
+        private void SetTravelLabel()
+        {
+            switch(comboBox2.SelectedIndex)
+            {
+                case 0:
+                    lblTravelParam.Visible = true;
+                    txtTravelParam.Visible = true;
+                    lblTravelParam.Text = "Range: ";
+                    break;
+
+                case 1:
+                case 2:
+                case 3:
+                    lblTravelParam.Visible = false;
+                    txtTravelParam.Visible = false;
+                    break;
+
+                case 4:
+                    lblTravelParam.Visible = true;
+                    txtTravelParam.Visible = true;
+                    lblTravelParam.Text = "# of Pokestop: ";
+                    break;
+            }
+        }
         private void saveBtn_Click(object sender, EventArgs e)
         {
             Settings.Instance.SetSetting(authTypeCb.Text, "AuthType");
@@ -116,6 +142,19 @@ namespace PokemonGo.RocketAPI.Window
             {
                 Settings.Instance.SetSetting(txtSuper.Text, "cpToUseSuperBall");
                 Settings.Instance.SetSetting(txtHyper.Text, "cpToUseHyperBall");
+            }
+
+            Settings.Instance.SetSetting(comboBox2.SelectedIndex, "travelMode");
+
+            switch(comboBox2.SelectedIndex)
+            {
+                case 0:
+                    Settings.Instance.SetSetting(txtTravelParam.Text, "deplacementsMaxDist");
+                    break;
+
+                case 4:
+                    Settings.Instance.SetSetting(txtTravelParam.Text, "deplacementsMaxDist");
+                    break;
             }
 
             Settings.Instance.Reload();
@@ -285,6 +324,11 @@ namespace PokemonGo.RocketAPI.Window
                 txtSuper.Text = ReadSettings.cpToUseSuperBall.ToString();
                 txtHyper.Text = ReadSettings.cpToUseHyperBall.ToString();
             }
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetTravelLabel();
         }
     }
 }
