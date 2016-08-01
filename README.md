@@ -1,17 +1,17 @@
-# Pokemon-Go-Bot
+# Fastest Bot for pokemon go
 
 * Official discord channel for user and developer discussions.
 * Not available yet
 
 #Window
-![alt tag](https://github.com/DetectiveSquirrel/Pokemon-Go-Rocket-API/blob/master/MainWindow.png)
-![alt tag](https://github.com/DetectiveSquirrel/Pokemon-Go-Rocket-API/blob/master/MainPokeUi.png)
-![alt tag](https://github.com/DetectiveSquirrel/Pokemon-Go-Rocket-API/blob/master/MainSettings2.png)
+![alt tag](https://github.com/mfron/PokemonGo-Bot/blob/master/BotInterface.png)
+![alt tag](https://github.com/mfron/PokemonGo-Bot/blob/master/settings%20pokemongo.png)
 
 
 A Pokémon Go bot in C#
 
 ## Features
+
 * PTC / Google Login
 * Get Map Objects and Inventory
 * Search for Gyms / Pokéstops / Spawns
@@ -27,7 +27,10 @@ A Pokémon Go bot in C#
 * German/English Pokémon names
 * Automatic use of Razzberries
 * Automatic Update checker
-* Logs everything into Logs.txt
+* Select pokemons to evolve
+* Select pokemons to transfert
+* Select pokemons to catch
+* 5 traveling modes
 
 ## Getting Started
 Build and Run (CTRL+F5)
