@@ -99,7 +99,7 @@ namespace PokemonGo.RocketAPI.Window
                 case 0:
                     lblTravelParam.Visible = true;
                     txtTravelParam.Visible = true;
-                    lblTravelParam.Text = "Range: ";
+                    lblTravelParam.Text = "Range (km): ";
                     txtTravelParam.Text = Settings.Instance.deplacementsMaxDist.ToString();
                     break;
 

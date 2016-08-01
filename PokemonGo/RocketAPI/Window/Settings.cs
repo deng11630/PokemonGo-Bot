@@ -56,9 +56,9 @@ namespace PokemonGo.RocketAPI.Window
         public int cpToUseHyperBall => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 500;
         public int IVToUseSuperBall => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 75;
         public int IVToUseHyperBall => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 90;
-        public int travelMode => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 0;
-        public int deplacementsMaxDist => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 0;
-        public int maxPokestop => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 0;
+        public int travelMode => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 1;
+        public int deplacementsMaxDist => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 5;
+        public int maxPokestop => GetSetting() != string.Empty ? int.Parse(GetSetting()) : 300;
 
         public AuthType AuthType
         {
