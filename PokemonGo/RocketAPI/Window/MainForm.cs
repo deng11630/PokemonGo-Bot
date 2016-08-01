@@ -187,21 +187,22 @@ namespace PokemonGo.RocketAPI.Window
                 var settings = await client.GetSettings();
                 ConsoleWriter.WriteProfile(profile);
                 inventoryActions = InventoryActions(2000, 10);
-                connected = true;       
-                await Movements.FarmAllWithSaving(client);
+                connected = true;
+                while (!stop && !unbanning)
+                    await Movements.FarmAllWithSaving(client);
                 await ForceUnban(client);
             }
             catch (TaskCanceledException)
             {
-                ConsoleWriter.ColoredConsoleWrite(Color.Red, "Task Canceled Exception - Restarting");  Restart(client);
+                ConsoleWriter.ColoredConsoleWrite(Color.Red, "Task Canceled Exception - Restarting"); Restart(client);
             }
             catch (UriFormatException)
             {
-                ConsoleWriter.ColoredConsoleWrite(Color.Red, "System URI Format Exception - Restarting");   Restart(client);
+                ConsoleWriter.ColoredConsoleWrite(Color.Red, "System URI Format Exception - Restarting"); Restart(client);
             }
             catch (ArgumentOutOfRangeException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "ArgumentOutOfRangeException - Restarting"); await Restart(client); }
-            catch (ArgumentNullException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Argument Null Refference - Restarting | Check if your credentials are correct");  Restart(client); }
-            catch (NullReferenceException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Null Refference - Restarting");  Restart(client); }
+            catch (ArgumentNullException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Argument Null Refference - Restarting | Check if your credentials are correct"); Restart(client); }
+            catch (NullReferenceException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Null Refference - Restarting"); Restart(client); }
             catch (Exception e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, e.Message); Restart(client); }
         }
 

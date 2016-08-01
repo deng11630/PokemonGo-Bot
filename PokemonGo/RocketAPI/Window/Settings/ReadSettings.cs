@@ -38,6 +38,8 @@ namespace PokemonGo.RocketAPI.Window
         public static int IVToUseSuperBall;
         public static int IVToUseHyperBall;
         public static AllEnum.TravelMode travelMode;
+        public static Func<Client, Task> TravelAction;
+        public static int maxPokestop;
 
 
         public static void Load(Settings settings)
@@ -69,7 +71,25 @@ namespace PokemonGo.RocketAPI.Window
             cpToUseHyperBall = settings.cpToUseHyperBall;
             IVToUseSuperBall = settings.IVToUseSuperBall;
             IVToUseHyperBall = settings.IVToUseHyperBall;
-    }
+
+            switch (travelMode){
+                case AllEnum.TravelMode.FarmAllInRange :
+                    TravelAction = Movements.FarmAllInRange;
+                    break;
+                case AllEnum.TravelMode.FarmAllWithoutSaving:
+                    TravelAction = Movements.FarmAllWithoutSaving;
+                    break;
+                case AllEnum.TravelMode.GoWhereYouWantButFarm:
+                    TravelAction = Movements.GoWhereYouWantButFarm;
+                    break;
+                case AllEnum.TravelMode.FarmXPokestop:
+                    TravelAction = Movements.FarmXPokestops;   
+                    break;
+                default :
+                    TravelAction = Movements.FarmAllWithSaving;
+                    break;
+            }
+        }
 
     }
 }

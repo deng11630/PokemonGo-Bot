@@ -49,7 +49,6 @@ namespace PokemonGo.RocketAPI.Window
             playerOverlay.Markers.Add(playerMarker);
 
             InitializeMap();
-
         }
 
         public static void InitializeMap()
@@ -96,7 +95,6 @@ namespace PokemonGo.RocketAPI.Window
                     }
                 }
 
-                S2GMapDrawer.DrawS2Cells(S2Helper.GetNearbyCellIds(ReadSettings.defaultLongitude, ReadSettings.defaultLatitude), searchAreaOverlay);
             }), null);
         }
 
@@ -106,6 +104,7 @@ namespace PokemonGo.RocketAPI.Window
             {
                 playerMarker.Position = (PointLatLng)o;
                 searchAreaOverlay.Polygons.Clear();
+                S2GMapDrawer.DrawS2Cells(S2Helper.GetNearbyCellIds(latitude, longitude), searchAreaOverlay);
             }), new PointLatLng(latitude, longitude));       
         }
 
