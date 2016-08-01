@@ -132,7 +132,7 @@ namespace PokemonGo.RocketAPI.Window
                 return;
             pokeStops = RouteOptimizer.Optimize(pokeStops, client.getCurrentLat(), client.getCurrentLong(), Map.pokestopsOverlay);
             PokemonActions.wildPokemons = mapObjects.MapCells.SelectMany(i => i.WildPokemons).ToList();
-            ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel mode : Farm all in range of " + ReadSettings.deplacementsMaxDist.ToString("N3") + "Km");
+            ConsoleWriter.ColoredConsoleWrite(Color.Cyan, $"Travel mode : Farm and save " + ReadSettings.maxPokestop + " pokestops");
             double traveledDistance = 0;
             var nextPokestopsTravel = new List<FortData>(pokeStops);
             foreach (var pokeStop in pokeStops)
