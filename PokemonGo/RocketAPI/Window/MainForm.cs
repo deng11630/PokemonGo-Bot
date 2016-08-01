@@ -189,7 +189,7 @@ namespace PokemonGo.RocketAPI.Window
                 inventoryActions = InventoryActions(2000, 10);
                 connected = true;
                 while (!stop && !unbanning)
-                    await Movements.FarmAllWithSaving(client);
+                    await ReadSettings.TravelAction.Invoke(client);
                 await ForceUnban(client);
             }
             catch (TaskCanceledException)
