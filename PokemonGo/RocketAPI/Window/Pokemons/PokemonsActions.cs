@@ -30,14 +30,10 @@ namespace PokemonGo.RocketAPI.Window
             {
                 ConsoleWriter.Evolved(pokemon, res);
                 MainForm.totalExperience += (res.ExpAwarded);
-                return TransfertAndEvolveSetting.toEvolve.Contains(res.EvolvedPokemon.PokemonType);
+                return CatchesEvolveTransfersSettings.toEvolve.Contains(res.EvolvedPokemon.PokemonType);
             }
             return false;
         }
-
-
-
-
 
         public static async Task EvolveAllGivenPokemons(Client client, IEnumerable<PokemonData> pokemonToEvolve, GetInventoryResponse inventory)
         {
@@ -73,13 +69,13 @@ namespace PokemonGo.RocketAPI.Window
 
         public static List<PokemonData> GetPokemonsToEvolve(List<PokemonData> pokemons)
         {
-            return pokemons.Where(p => TransfertAndEvolveSetting.toEvolve.Contains(p.PokemonId)).OrderByDescending(p => Perfect(p)).ToList();
+            return pokemons.Where(p => CatchesEvolveTransfersSettings.toEvolve.Contains(p.PokemonId)).OrderByDescending(p => Perfect(p)).ToList();
         }
 
         public static List<PokemonData> GetAllButStrongestPokemon(List<PokemonData> pokemons)
         {
             List<PokemonData> result = new List<PokemonData>();
-            foreach (var unwantedPokemonType in TransfertAndEvolveSetting.toTransfert)
+            foreach (var unwantedPokemonType in CatchesEvolveTransfersSettings.toTransfert)
             {
                 var partOfRes = pokemons.Where(p => p.PokemonId == unwantedPokemonType)
                     .OrderByDescending(p => p.Cp).Skip(1).ToList();
@@ -91,7 +87,7 @@ namespace PokemonGo.RocketAPI.Window
         public static List<PokemonData> GetAllButHighestIVPokemon(List<PokemonData> pokemons)
         {
             List<PokemonData> result = new List<PokemonData>();
-            foreach (var unwantedPokemonType in TransfertAndEvolveSetting.toTransfert)
+            foreach (var unwantedPokemonType in CatchesEvolveTransfersSettings.toTransfert)
             {
                 var partOfRes = pokemons.Where(p => p.PokemonId == unwantedPokemonType)
                     .OrderByDescending(p => Perfect(p)).Skip(1).ToList();
@@ -112,7 +108,7 @@ namespace PokemonGo.RocketAPI.Window
 
         private static async Task TransfertPokemon(PokemonData pokemon)
         {
-            if (pokemon.Favorite == 0)
+            if (CatchesEvolveTransfersSettings.toTransfert.Contains((AllEnum.PokemonId)pokemon.Id))
             {
                 var transferPokemonResponse = await client.TransferPokemon(pokemon.Id);
                 ConsoleWriter.TransferedPokemon(pokemon, transferPokemonResponse);
@@ -130,17 +126,17 @@ namespace PokemonGo.RocketAPI.Window
         }
 
 
-        public static async Task EvolveAndTransfert(Client client, GetInventoryResponse inventory)
+        public static async Task EvolveAndTransfert(Client client)
         {
-            var pokemons = await UpdatePokemons();
-            if (OntransfertEvolve)
+            if (OntransfertEvolve || Inventory.inventory == null)
                 return;
+            var pokemons = Inventory.pokemons;
             if (Inventory.nbPokemons > ReadSettings.maxPokemonsOnInventory)
             {
                 OntransfertEvolve = true;
                 if (ReadSettings.evolveAllGivenPokemons)
                 {
-                    await EvolveAllGivenPokemons(client, GetPokemonsToEvolve(pokemons), inventory);
+                    await EvolveAllGivenPokemons(client, GetPokemonsToEvolve(pokemons), Inventory.inventory);
                     pokemons = UpdatePokemons().Result;
                 }
                 switch (ReadSettings.transferType)
@@ -200,7 +196,8 @@ namespace PokemonGo.RocketAPI.Window
 
         public static async Task ExecuteCatchAllNearbyPokemons(GetMapObjectsResponse mapObjects)
         {
-            var pokemons = mapObjects.MapCells.SelectMany(i => i.CatchablePokemons).ToList();
+            var pokemons = mapObjects.MapCells.SelectMany(i => i.CatchablePokemons).
+                Where(i => !CatchesEvolveTransfersSettings.toNotCatch.Contains(i.PokemonId)).ToList();
             farmingPokemons = true;
             foreach (var pokemon in pokemons)
             {

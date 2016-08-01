@@ -1,11 +1,13 @@
 ﻿using PokemonGo.RocketAPI.GeneratedCode;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PokemonGo.RocketAPI.Window
 {
@@ -17,7 +19,9 @@ namespace PokemonGo.RocketAPI.Window
         {
             try
             {
-                ColoredConsoleWrite(Color.Green, "Your version is 3.1.0");
+                string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                version = version.Substring(0, version.Length - 2);
+                ColoredConsoleWrite(Color.Green, "Your version is " + version);
                 ColoredConsoleWrite(Color.Green, "You can find it at www.github.com/mfron/Pokemon-Go-Bot");
             }
             catch (Exception)
@@ -77,6 +81,7 @@ namespace PokemonGo.RocketAPI.Window
             ColoredConsoleWrite(Color.DarkGray, "Stardust: " + profile.Profile.Currency.ToArray()[1].Amount + "\n");
             ColoredConsoleWrite(Color.DarkGray, "Latitude: " + ReadSettings.defaultLatitude);
             ColoredConsoleWrite(Color.DarkGray, "Longitude: " + ReadSettings.defaultLongitude);
+            ColoredConsoleWrite(Color.Green, "For every bug, contact me www.github.com/mfron/Pokemon-Go-Bot");
             ColoredConsoleWrite(Color.Yellow, "----------------------------");
         }
 
@@ -185,12 +190,11 @@ namespace PokemonGo.RocketAPI.Window
             else if (pokestops.Count < 150)
                 ConsoleWriter.ColoredConsoleWrite(Color.Yellow, $"Great place, {pokestops.Count} pokestops near you");
             else
-            {
                 ConsoleWriter.ColoredConsoleWrite(Color.Pink, $"Wouw ! Excelente place, {pokestops.Count} pokestops near you");
-                ConsoleWriter.ColoredConsoleWrite(Color.Red, $"Please share your position with the communauty https://github.com/mfron/Pokemon-Go-Bot/issues");
-            }
             return true;  
         }
+
+
 
         public static async Task ConsoleLevelTitle(string Username, Client client, GetInventoryResponse inventory)
         {
@@ -199,16 +203,26 @@ namespace PokemonGo.RocketAPI.Window
             foreach (var v in stats)
                 if (v != null)
                 {
-                    int XpDiff = xpDiff[v.Level];
+
+                        int XpDiff = xpDiff[v.Level];
+                        //Calculating the exp needed to level up
+                        Single expNextLvl = (v.NextLevelXp - v.Experience);
+                        //Calculating the exp made per second
+                        var xpSec = (Math.Round(MainForm.totalExperience / MainForm.GetRuntime()) / 60) / 60;
+                        //Calculating the seconds left to level up
+                        int secondsLeft = 0;
+                        if (xpSec != 0)
+                            secondsLeft = Convert.ToInt32((expNextLvl / xpSec));
+                        //formatting data to make an output like DateFormat
+                        var ts = TimeSpan.FromSeconds(secondsLeft);       
                     string waitUnlock = (Movements.waitUnlock) ? " | Wait unlock catching " : "";
                     MainForm.instance.SetStatusText(string.Format(
-                        Username + " | Level: {0:0} - ({2:0} / {3:0}) | Runtime {1} | Stardust: {4:0}",
-                        v.Level, _getSessionRuntimeInTimeFormat(), 
-                        (v.Experience - v.PrevLevelXp - XpDiff),
-                        (v.NextLevelXp - v.PrevLevelXp - XpDiff), 
-                        profile.Profile.Currency.ToArray()[1].Amount) + 
-                        " | XP/Hour: " + Math.Round(MainForm.totalExperience / MainForm.GetRuntime()) + 
-                        " | Pokemon/Hour: " + Math.Round(PokemonActions.nbCatchs / MainForm.GetRuntime()) + waitUnlock);
+                        profile.Profile.Username + " | Level: {0:0} - ({2:0} / {3:0}) | Runtime {1} | Stardust: {4:0}",
+                        v.Level, _getSessionRuntimeInTimeFormat(),
+                        (v.Experience - v.PrevLevelXp - XpDiff), (v.NextLevelXp - v.PrevLevelXp - XpDiff), profile.Profile.Currency.ToArray()[1].Amount) +
+                        " | XP/Hour: " + Math.Round(MainForm.totalExperience / MainForm.GetRuntime()) + " | Pokemon/Hour: " + Math.Round(PokemonActions.nbCatchs / MainForm.GetRuntime()) +
+                        " | NextLevel in: " + ts.Hours + ":" + ts.Minutes + ":" + ts.Seconds + waitUnlock);
+
                 }
         }
 
@@ -223,6 +237,7 @@ namespace PokemonGo.RocketAPI.Window
 
         public static int[] xpDiff = new int[]
        {
+            0,
             0,
             1000,
             2000,

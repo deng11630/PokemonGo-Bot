@@ -27,7 +27,6 @@ namespace PokemonGo.RocketAPI.Window
         {
             Map.UpdatePlayerLocation(lat, lng);       
             await client.UpdatePlayerLocation(lat, lng);
-            return ;
         }
 
 

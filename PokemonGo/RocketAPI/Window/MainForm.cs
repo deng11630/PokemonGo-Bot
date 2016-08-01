@@ -77,16 +77,8 @@ namespace PokemonGo.RocketAPI.Window
 
         private Image GetPokemonImage(int pokemonId)
         {
-            var Sprites = AppDomain.CurrentDomain.BaseDirectory + "Sprites\\";
-            string location = Sprites + pokemonId + ".png";
-            if (!Directory.Exists(Sprites))
-                Directory.CreateDirectory(Sprites);
-            if (!File.Exists(location))
-            {
-                WebClient wc = new WebClient();
-                wc.DownloadFile("http://pokeapi.co/media/sprites/pokemon/" + pokemonId + ".png", @location);
-            }
-            return Image.FromFile(location);
+            Image Sprites = (Image)Properties.Resources.ResourceManager.GetObject("_" + pokemonId.ToString());
+            return Sprites;
         }
 
         private void PokemonListButton_Click(object sender, CellClickEventArgs e)
@@ -181,6 +173,9 @@ namespace PokemonGo.RocketAPI.Window
 
         private async void Execute()
         {
+            PokemonActions.OntransfertEvolve = false;
+            unbanning = false;
+            stop = false;
             client = new Client(ClientSettings);
             PokemonActions.client = client;
             Movements.locationManager = new LocationManager(client, ClientSettings.TravelSpeed);
@@ -193,7 +188,7 @@ namespace PokemonGo.RocketAPI.Window
                 ConsoleWriter.WriteProfile(profile);
                 inventoryActions = InventoryActions(2000, 10);
                 connected = true;       
-                await Movements.TEST(client);
+                await Movements.FarmAllWithSaving(client);
                 await ForceUnban(client);
             }
             catch (TaskCanceledException)
@@ -205,9 +200,9 @@ namespace PokemonGo.RocketAPI.Window
                 ConsoleWriter.ColoredConsoleWrite(Color.Red, "System URI Format Exception - Restarting");   Restart(client);
             }
             catch (ArgumentOutOfRangeException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "ArgumentOutOfRangeException - Restarting"); await Restart(client); }
-            catch (ArgumentNullException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Argument Null Refference - Restarting");  Restart(client); }
+            catch (ArgumentNullException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Argument Null Refference - Restarting | Check if your credentials are correct");  Restart(client); }
             catch (NullReferenceException e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, "Null Refference - Restarting");  Restart(client); }
-            catch (Exception e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, e.ToString()); Restart(client); }
+            catch (Exception e) { e = e; ConsoleWriter.ColoredConsoleWrite(Color.Red, e.Message); Restart(client); }
         }
 
 
@@ -218,6 +213,58 @@ namespace PokemonGo.RocketAPI.Window
             ReadSettings.Load(Settings.Instance);
             ClientSettings = Settings.Instance;
             InitializeComponent();
+            LoadPoke();
+        }
+
+        private void LoadPoke()
+        {
+            DataTable allPkm = new DataTable();
+
+            var colId = new DataColumn();
+            colId.DataType = typeof(int);
+            colId.ColumnName = "Id";
+            allPkm.Columns.Add(colId);
+
+            var colPkm = new DataColumn();
+            colPkm.DataType = typeof(string);
+            colPkm.ColumnName = "Pokémon";
+            allPkm.Columns.Add(colPkm);
+
+            var colEvolve = new DataColumn();
+            colEvolve.DataType = typeof(bool);
+            colEvolve.ColumnName = "Evolve";
+            allPkm.Columns.Add(colEvolve);
+
+            var colTransfer = new DataColumn();
+            colTransfer.DataType = typeof(bool);
+            colTransfer.ColumnName = "Transfer";
+            allPkm.Columns.Add(colTransfer);
+
+            var colCatch = new DataColumn();
+            colCatch.DataType = typeof(bool);
+            colCatch.ColumnName = "Catch";
+            allPkm.Columns.Add(colCatch);
+
+
+            var colImg = new DataColumn();
+            colImg.DataType = typeof(Image);
+            colImg.ColumnName = " ";
+            allPkm.Columns.Add(colImg);
+
+            if (ReadSettings.poke != "")
+            {
+                StringReader sr = new StringReader(ReadSettings.poke);
+                allPkm.TableName = "Poke";
+                allPkm.ReadXml(sr);
+            }
+
+
+            allPkm.Columns["Id"].SetOrdinal(0);
+            allPkm.Columns[" "].SetOrdinal(1);
+            allPkm.Columns["Pokémon"].SetOrdinal(2);
+            allPkm.Columns["Evolve"].SetOrdinal(3);
+            allPkm.Columns["Transfer"].SetOrdinal(4);
+            allPkm.Columns["Catch"].SetOrdinal(5);
         }
 
         public static double GetRuntime()
@@ -297,7 +344,7 @@ namespace PokemonGo.RocketAPI.Window
             }
             ConsoleWriter.ConsoleLevelTitle(profile.Profile.Username, client, Inventory.inventory);
             ConsoleWriter.PrintLevel(client, Inventory.inventory);
-            PokemonActions.EvolveAndTransfert(client, Inventory.inventory);
+            PokemonActions.EvolveAndTransfert(client);
             await Task.Delay(delay);
             if (!stopInventoryActions)
                 InventoryActions(delay, nb);
@@ -400,7 +447,7 @@ namespace PokemonGo.RocketAPI.Window
         // Pulled from NecronomiconCoding
         public static string _getSessionRuntimeInTimeFormat()
         {
-            return (DateTime.Now - InitSessionDateTime).ToString(@"dd\.hh\:mm\:ss");
+            return (DateTime.Now - InitSessionDateTime).ToString(@"hh\:mm\:ss");
         }
 
 

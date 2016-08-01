@@ -101,31 +101,28 @@ namespace PokemonGo.RocketAPI.Window
                     break;
             }
 
-            for (int i = 1; i <= 150; i++)
+            foreach(PokemonId id in Enum.GetValues(typeof(PokemonId)))
             {
-                
-
+                if (id == 0) continue;
                 if (ReadSettings.poke == "")
                 {
                     DataRow dtRow = allPkm.NewRow();
 
-                    dtRow[1] = ScaleImage(GetPokemonImage(i), ReadSettings.imageSize, ReadSettings.imageSize);
+                    dtRow[1] = ScaleImage(GetPokemonImage((int)id), ReadSettings.imageSize, ReadSettings.imageSize);
 
-                    dtRow[0] = i;
-                    dtRow[2] = pokeName.ElementAt(i);
-                    /// TODO : Get Values
-                    dtRow[3] = true;
-                    dtRow[4] = true;
-                    dtRow[5] = true;
+                    dtRow[0] = (int)id;
+                    dtRow[2] = pokeName.ElementAt((int)id);
+                    dtRow[3] = CatchesEvolveTransfersSettings.toEvolve.Contains(id);
+                    dtRow[4] = CatchesEvolveTransfersSettings.toTransfert.Contains(id);
+                    dtRow[5] = !CatchesEvolveTransfersSettings.toNotCatch.Contains(id);
                     allPkm.Rows.Add(dtRow);
                 }
                 else
                 {
-                    allPkm.Rows[i - 1][1] = ScaleImage(GetPokemonImage(i), ReadSettings.imageSize, ReadSettings.imageSize);
-                }
-
-                
+                    allPkm.Rows[(int)id - 1][1] = ScaleImage(GetPokemonImage((int)id), ReadSettings.imageSize, ReadSettings.imageSize);
+                }            
             }
+           // SaveOnVariables();
 
             pkmList.Columns[0].Visible = false;
             pkmList.Columns[1].Width = ReadSettings.imageSize;
@@ -152,16 +149,8 @@ namespace PokemonGo.RocketAPI.Window
 
         private Image GetPokemonImage(int pokemonId)
         {
-            var Sprites = AppDomain.CurrentDomain.BaseDirectory + "Sprites\\";
-            string location = Sprites + pokemonId + ".png";
-            if (!Directory.Exists(Sprites))
-                Directory.CreateDirectory(Sprites);
-            if (!File.Exists(location))
-            {
-                WebClient wc = new WebClient();
-                wc.DownloadFile("http://pokeapi.co/media/sprites/pokemon/" + pokemonId + ".png", @location);
-            }
-            return Image.FromFile(location);
+            Image Sprites = (Image)Properties.Resources.ResourceManager.GetObject("_" + pokemonId.ToString());
+            return Sprites;
         }
 
         private void pkmList_SelectionChanged(object sender, EventArgs e)
@@ -171,13 +160,41 @@ namespace PokemonGo.RocketAPI.Window
 
         private void button1_Click(object sender, EventArgs e)
         {
+            SaveOnVariables();
             StringWriter sw = new StringWriter();
             allPkm.TableName = "Poke";
             allPkm.Columns.RemoveAt(1);
             allPkm.WriteXml(sw);
             ReadSettings.poke = sw.ToString();
             Settings.Instance.SetSetting(sw.ToString(), "Poke");
+            sw.Dispose();
             Close();
         }
+
+        private void SaveOnVariables()
+        {
+            CatchesEvolveTransfersSettings.toEvolve.Clear();
+            CatchesEvolveTransfersSettings.toTransfert.Clear();
+            CatchesEvolveTransfersSettings.toNotCatch.Clear();
+            foreach (DataRow pkm in allPkm.Rows)
+            {
+                if ((bool)pkm[3])
+                {
+                    CatchesEvolveTransfersSettings.toEvolve.Add((PokemonId)((int)pkm[0]));
+                }
+
+                if ((bool)pkm[4])
+                {
+                    CatchesEvolveTransfersSettings.toTransfert.Add((PokemonId)((int)pkm[0]));
+                }
+
+                if (!(bool)pkm[5])
+                {
+                    CatchesEvolveTransfersSettings.toNotCatch.Add((PokemonId)((int)pkm[0]));
+                }
+            }
+        }
+
+
     }
 }

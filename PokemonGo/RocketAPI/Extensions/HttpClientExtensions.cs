@@ -29,28 +29,26 @@ namespace PokemonGo.RocketAPI.Extensions
         }
 
 
-        private static bool waitingForResponse = false;
+
         public static async Task<TResponsePayload> PostProtoPayload<TRequest, TResponsePayload>(this HttpClient client,
             string url, TRequest request) where TRequest : IMessage<TRequest>
             where TResponsePayload : IMessage<TResponsePayload>, new()
         {
             ByteString payload = null;
-            while (waitingForResponse)
-                await Task.Delay(30);
-            waitingForResponse = true;
             Response response = null;
             int count = 0;
         START:
             //ColoredConsoleWrite(ConsoleColor.Red, "ArgumentOutOfRangeException - Restarting");
             //ColoredConsoleWrite(ConsoleColor.Red, ($"[DEBUG] [{DateTime.Now.ToString("HH:mm:ss")}] requesting {typeof(TResponsePayload).Name}"));
             response = await PostProto(client, url, request);
-            if (response.Payload.Count < 1 && count < 30)
+            if (response.Payload.Count < 1 && count < 50)
             {
                 count++;
                 await Task.Delay(30 * count);
                 goto START;
             }
-            waitingForResponse = false;
+            if (response.Payload.Count < 1)
+                throw new Exception("Pokemon server ignored the request. Lets restart the bot.");
             payload = response.Payload[0];
             var parsedPayload = new TResponsePayload();
             parsedPayload.MergeFrom(payload);
