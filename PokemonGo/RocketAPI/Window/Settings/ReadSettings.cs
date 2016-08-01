@@ -35,8 +35,8 @@ namespace PokemonGo.RocketAPI.Window
         public static string pokeballMode;
         public static int cpToUseSuperBall;
         public static int cpToUseHyperBall;
-        public static int IVToUseSuperBall;
-        public static int IVToUseHyperBall;
+        public static float IVToUseSuperBall;
+        public static float IVToUseHyperBall;
         public static AllEnum.TravelMode travelMode;
         public static Func<Client, Task> TravelAction;
         public static int maxPokestop;

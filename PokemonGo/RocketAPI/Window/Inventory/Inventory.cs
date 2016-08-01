@@ -58,7 +58,7 @@ namespace PokemonGo.RocketAPI.Window
         }
 
 
-        public static MiscEnums.Item GetPokeballToUse(int? pokemonCP, int pokemonIV)
+        public static MiscEnums.Item GetPokeballToUse(int? pokemonCP, float? pokemonIV)
         {
             if (ReadSettings.pokeballMode == "CP")
             {

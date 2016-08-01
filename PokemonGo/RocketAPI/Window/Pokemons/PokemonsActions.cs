@@ -164,7 +164,7 @@ namespace PokemonGo.RocketAPI.Window
         }
 
 
-        private static async Task<CatchPokemonResponse> CatchPokemon(EncounterResponse encounterPokemonResponse, MapPokemon pokemon, int? pokemonCP)
+        private static async Task<CatchPokemonResponse> CatchPokemon(EncounterResponse encounterPokemonResponse, MapPokemon pokemon, int? pokemonCP, float? pokemonIV)
         {
             if (Inventory.razzBerry > 0)
             {
@@ -182,7 +182,7 @@ namespace PokemonGo.RocketAPI.Window
                         Inventory.razzBerry--;
                     }
             }
-            return await client.CatchPokemon(pokemon.EncounterId, pokemon.SpawnpointId, (int)Inventory.GetPokeballToUse(pokemonCP)); ; //note: reverted from settings because this should not be part of settings but part of logic
+            return await client.CatchPokemon(pokemon.EncounterId, pokemon.SpawnpointId, (int)Inventory.GetPokeballToUse(pokemonCP, pokemonIV)); ; //note: reverted from settings because this should not be part of settings but part of logic
 
         }
 
@@ -211,7 +211,7 @@ namespace PokemonGo.RocketAPI.Window
                 CatchPokemonResponse caughtRes;
                 do
                 {
-                    caughtRes = await CatchPokemon(encounterPokemonResponse, pokemon, pokemonCP);
+                    caughtRes = await CatchPokemon(encounterPokemonResponse, pokemon, pokemonCP, pokemonIV);
                 } while (!IsCaughtOrEscape(caughtRes));
                 if (caughtRes.Status == CatchStatus.CatchSuccess)
                 {
