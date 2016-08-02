@@ -1,7 +1,7 @@
 # Fastest Bot for pokemon go
 
-* Official discord channel for user and developer discussions.
-* Not available yet
+* Official discord channel for user and developer discussions -> https://discord.gg/DrRNe 
+* Official facebook page -> https://www.facebook.com/PokemonGoBotMfron
 
 #Window
 ![alt tag](https://github.com/mfron/PokemonGo-Bot/blob/master/BotInterface.png)
